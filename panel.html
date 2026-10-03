@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pannello del barbiere</title>
+<style>
+:root{--bg:#0f1620;--surface:#141d2b;--card:#1a2433;--fg:#eef1f6;--muted:#94a0ae;--accent:#facc15;--danger:#e5484d;--ok:#5fcf8a;--line:#26323f;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;line-height:1.5}
+.wrap{max-width:880px;margin:24px auto;padding:0 16px}
+.h1{font-size:24px;margin:6px 0 2px}
+.top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.cards{display:grid;gap:10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px}
+.input,select{background:#0e1622;color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:15px}
+.btn{background:var(--accent);color:#101;border:0;border-radius:9px;padding:11px 16px;font-size:15px;font-weight:650;cursor:pointer}
+.btn.sec{background:transparent;color:var(--fg);border:1px solid var(--line)}
+.btn.danger{background:var(--danger);color:#fff}
+.btn.sm{padding:6px 11px;font-size:13px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{border:1px solid var(--line);padding:8px 9px;text-align:left;vertical-align:top}
+th{background:#0e1622;color:var(--muted);position:sticky;top:0}
+.msg{white-space:pre-wrap;margin:8px 0;padding:10px 12px;border-radius:9px}
+.err{background:rgba(229,72,77,.14);color:var(--danger)}
+.ok{background:rgba(95,207,138,.14);color:var(--ok)}
+.muted{color:var(--muted);font-size:13px}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+field{border:0;margin:0;padding:0}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div><p class="muted" style="margin:0">Pannello del barbiere · <span id="salonLabel">…</span></p>
+      <h1 class="h1" id="title">Prenotazioni</h1></div>
+    <button class="btn sec" id="logout" style="display:none">Esci</button>
+  </div>
+  <div id="msg"></div>
+  <div id="app"></div>
+</div>
+<script>
+const $=s=>document.querySelector(s);
+function show(o,c){$('#msg').innerHTML='<div class="msg '+c+'">'+o+'</div>';}
+async function api(path,body){
+  const r=await fetch(path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body||{})});
+  let d={}; try{d=await r.json();}catch(e){}
+  d._http=r.status; return d;
+}
+const hhmm=m=>String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');
+
+function fmtDate(ds){const[y,m,dd]=ds.split('-');const giorni=['Dom','Lun','Mar','Mer','Gio','Ven','Sab'];
+  const dt=new Date(y,m-1,dd);return giorni[dt.getDay()]+' '+dd+'/'+m+'/'+y;}
+
+function bookingRows(b){
+  return b.map(x=>{const who=x.client_name||'';const ph=x.client_phone||'';
+    const note=x.note?('<br><span class="muted">'+x.note.replace(/</g,'&lt;')+'</span>'):'';
+    return '<tr><td><b>'+fmtDate(x.date)+'</b><br><span class="muted">'+hhmm(x.minutes)+'</span></td>'+
+      '<td>'+x.service_name+'<br><span class="muted">'+x.duration+' min</span></td>'+
+      '<td>'+x.barber+'</td>'+
+      '<td>'+who+'<br><span class="muted">'+ph+'</span>'+note+'</td>'+
+      '<td style="white-space:nowrap">'+
+        '<button class="btn sm sec" onclick="move('+x.id+',\''+x.date+'\','+x.minutes+')">Sposta</button> '+
+        '<button class="btn sm danger" onclick="del('+x.id+',\''+(x.code||'')+'\',\''+((x.client_name||'')+'').replace(/'/g,'')+'\')">Cancella</button>'+
+      '</td></tr>';
+  }).join('');
+}
+
+async function load(){
+  const d=await api('/panel/list');
+  if(d._http===401){login();return;}
+  $('#logout').style.display='';
+  $('#title').textContent='Prenotazioni — '+d.name;
+  $('#salonLabel').textContent=d.salon;
+  const empty=d.bookings.length===0?'<p class="muted">Nessuna prenotazione ancora.</p>':'';
+  $('#app').innerHTML='<div class="card"><table><thead><tr><th>Quando</th><th>Servizio</th><th>Barbiere</th><th>Cliente</th><th>Azioni</th></tr></thead>'+
+    '<tbody>'+bookingRows(d.bookings)+'</tbody></table></div>'+empty;
+}
+
+function login(){
+  $('#title').textContent='Accedi al pannello';
+  $('#salonLabel').textContent='';
+  fetch('/salons').then(r=>r.json()).then(d=>{
+    const opts=d.salons.map(s=>'<option value="'+s.slug+'">'+s.name+' — '+s.address+'</option>').join('');
+    $('#app').innerHTML='<div class="card"><h2 style="margin:0 0 12px">Accedi</h2><form onsubmit="doLogin(event);return false">'+
+      '<div class="row"><select id="salonSel">'+opts+'</select>'+
+      '<input class="input" id="pass" type="password" placeholder="Codice del salone" autocomplete="current-password"></div>'+
+      '<p class="muted">Scegli il tuo salone e inserisci il codice che ti è stato comunicato.</p>'+
+      '<button class="btn" style="margin-top:10px">Entra</button></form></div>';
+  });
+}
+async function doLogin(ev){
+  const d=await api('/panel/login',{salon:$('#salonSel').value,passcode:$('#pass').value});
+  if(d.ok){show('Accesso riuscito.','ok');load();}
+  else show(d.error||'Credenziali non valide','err');
+}
+window.del=async(id,code,name)=>{
+  if(!confirm('Cancellare la prenotazione'+(name?' di '+name:'')+'? Lo slot tornerà libero.'))return;
+  const d=await api('/panel/cancel',{id:id});
+  if(d.cancellata){show('Prenotazione cancellata.','ok');load();}else show(d.error||'Errore','err');
+};
+window.move=async(id,date,min)=>{
+  const d0=prompt('Nuova data (AAAA-MM-GG), es '+date+' →','');
+  if(!d0)return;
+  const t0=prompt('Nuovo orario (es. 17:30) — attuale '+hhmm(min),'');
+  if(!t0)return;
+  const hm=t0.split(':');
+  const tm=Number(hm[0])*60+Number(hm[1]);
+  const d=await api('/panel/reschedule',{id:id,date:d0.trim(),time:tm});
+  if(d.spostata){show('Prenotazione spostata a '+d0+' ore '+t0+'.','ok');load();}
+  else if(d._http===409)show('Orario appena occupato da un\'altra prenotazione: scegline un altro.','err');
+  else show(d.error||'Errore','err');
+};
+$('#logout').onclick=async()=>{await api('/panel/logout');location.reload();};
+load();
+</script>
+</body>
+</html>

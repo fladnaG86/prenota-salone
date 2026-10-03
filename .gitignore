@@ -1,0 +1,19 @@
+# data + runtime (never commit)
+bookings.db
+bookings.db-wal
+bookings.db-shm
+server.log
+
+# secrets
+*.env
+barberia.env
+
+# python
+__pycache__/
+*.pyc
+
+# editors / os
+.DS_Store
+.idea/
+.vscode/
+node_modules/

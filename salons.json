@@ -1,0 +1,145 @@
+{
+  "defaults": {
+    "services": [
+      {
+        "id": "taglio",
+        "name": "Taglio classico",
+        "min": 30,
+        "price": 25
+      },
+      {
+        "id": "taglio-barba",
+        "name": "Taglio + barba",
+        "min": 50,
+        "price": 38
+      },
+      {
+        "id": "barba",
+        "name": "Barba modellata",
+        "min": 25,
+        "price": 18
+      },
+      {
+        "id": "rasatura",
+        "name": "Rasatura tradizionale",
+        "min": 30,
+        "price": 24
+      },
+      {
+        "id": "bambino",
+        "name": "Taglio bambino",
+        "min": 25,
+        "price": 15
+      },
+      {
+        "id": "rituale",
+        "name": "Rituale capelli e cute",
+        "min": 20,
+        "price": 14
+      }
+    ],
+    "hours": {
+      "1": [
+        540,
+        1140
+      ],
+      "2": [
+        540,
+        1200
+      ],
+      "3": [
+        540,
+        1200
+      ],
+      "4": [
+        540,
+        1200
+      ],
+      "5": [
+        540,
+        1200
+      ],
+      "6": [
+        540,
+        1020
+      ]
+    }
+  },
+  "salons": [
+    {
+      "slug": "demo",
+      "name": "Salone Demo",
+      "tagline": "Barber shop · salone di esempio",
+      "address": "Via Esempio 1, 00100 Città",
+      "phone": "0000000000",
+      "web": "",
+      "instagram": "",
+      "notify_email": "info@salonedemo.it",
+      "hours": {
+        "1": [
+          540,
+          1140
+        ],
+        "2": [
+          540,
+          1200
+        ],
+        "3": [
+          540,
+          1200
+        ],
+        "4": [
+          540,
+          1200
+        ],
+        "5": [
+          540,
+          1200
+        ],
+        "6": [
+          540,
+          1020
+        ]
+      },
+      "services": [
+        {
+          "id": "taglio",
+          "name": "Taglio classico",
+          "min": 30,
+          "price": 25
+        },
+        {
+          "id": "taglio-barba",
+          "name": "Taglio + barba",
+          "min": 50,
+          "price": 38
+        },
+        {
+          "id": "barba",
+          "name": "Barba modellata",
+          "min": 25,
+          "price": 18
+        },
+        {
+          "id": "rasatura",
+          "name": "Rasatura tradizionale",
+          "min": 30,
+          "price": 24
+        },
+        {
+          "id": "bambino",
+          "name": "Taglio bambino",
+          "min": 25,
+          "price": 15
+        },
+        {
+          "id": "rituale",
+          "name": "Rituale capelli e cute",
+          "min": 20,
+          "price": 14
+        }
+      ],
+      "cap": 1
+    }
+  ]
+}
