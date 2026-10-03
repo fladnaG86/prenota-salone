@@ -21,7 +21,8 @@ all from **one** deployment and **one** SQLite file.
 Small salons usually don't have a booking system: they take appointments by
 phone or DM, and lose clients when nobody answers. This is a drop-in page they
 can put on their phone / Instagram bio, where clients book themselves — evenings
-and Sundays included. No app to install for the client.
+and Sundays included. No app to install for the client, and the appointment goes
+straight into their phone calendar.
 
 ## Features
 
@@ -33,8 +34,10 @@ and Sundays included. No app to install for the client.
   duration-aware capacity check, so two clients can't grab the same slot.
 - **Owner panel** (`/panel`, one passcode per salon) — view, reschedule and
   cancel bookings; login rate-limited, session cookie is HMAC-signed.
-- **Optional email** — booking confirmation + a `.ics` calendar attachment
-  (works with any SMTP, e.g. a free Gmail/ProtonMail account).
+- **Confirmation email with a calendar invite (`.ics`)** — the client taps once
+  and the appointment lands in their **iPhone or Android calendar**, with a
+  reminder 2 hours before. No app to install, nothing to type by hand. The
+  booking still succeeds when email is not configured.
 - **GDPR-friendly** — a ready privacy page, explicit consent checkbox, minimal
   data collected.
 - **Hardened by default** — rate limiting, capped request sizes, HTML escaping,
@@ -215,7 +218,9 @@ Ogni salone ha il suo sottodominio (`salone-a.tuodominio.it`), tutto da **un sol
 deploy e **un solo** file SQLite.
 
 Il cliente sceglie servizio, giorno e orario libero e prenota in pochi secondi,
-senza installare niente; il titolare gestisce appuntamenti da `/panel`.
+senza installare niente; riceve un'email di conferma con l'appuntamento che si
+aggiunge al calendario di iPhone o Android con un tocco (promemoria 2 ore prima).
+Il titolare gestisce appuntamenti da `/panel`.
 Le prenotazioni sono **sicure in concorrenza** (transazione atomica + controllo
 capienza), e i dati raccolti sono minimi (pagina privacy GDPR inclusa).
 
