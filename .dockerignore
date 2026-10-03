@@ -1,0 +1,16 @@
+.git
+.gitignore
+docs
+deploy
+*.md
+*.db
+*.db-wal
+*.db-shm
+*.log
+*.env
+barberia.env
+data
+__pycache__
+*.pyc
+.dockerignore
+docker-compose.yml

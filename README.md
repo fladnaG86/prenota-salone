@@ -71,7 +71,7 @@ All optional; sensible defaults. Secrets are **never** in the source.
 | `BARBERIA_PORT` | listen port (default `8899`) |
 | `BARBERIA_HOST` | bind address (default `0.0.0.0`) |
 | `BARBERIA_DB_PATH` | SQLite path (default `./bookings.db`) |
-| `BARBERIA_LOG_PATH` | log file (default `./server.log`) |
+| `BARBERIA_LOG_PATH` | log file, or `stdout`/`-` to log to stdout (default `./server.log`) |
 | `BARBERIA_SALONS_JSON` | tenants file (default `./salons.json`) |
 | `BARBERIA_PANEL_USERS` | passcodes file (default `./panel_users.json`) |
 | `BARBERIA_RETENTION_DAYS` | booking retention (default `730`) |
@@ -94,17 +94,66 @@ See `.env.example`.
 3. *(optional)* drop `og/<slug>.png` (1200×630) and `og/<slug>-logo.png`.
 4. Restart the service.
 
-## Production deploy (short version)
+## Deploy
 
-- Run as a systemd service under a dedicated user, with an `EnvironmentFile`
-  (`chmod 600`), `Restart=on-failure`, `UMask=0077`.
-- Put nginx in front with a wildcard `server_name *.yourdomain` → `127.0.0.1:<port>`
-  (`proxy_set_header Host $host`).
-- TLS: either a wildcard cert (`certbot ... -d yourdomain -d "*.yourdomain"`) or
-  **Cloudflare Free** in front (SSL/TLS mode **Flexible**, since the origin only
-  speaks HTTP). DNS: `A @` and `A *` → your server IP; proxy the per-tenant
-  records too.
-- Backup = copy the single `bookings.db` + the two JSON files.
+### Docker (quickest)
+
+```bash
+docker build -t prenota-salone .
+docker run -d --name prenota-salone -p 8899:8899 \
+  -v prenota_data:/data \
+  -e BARBERIA_PANEL_SECRET="$(openssl rand -hex 32)" \
+  -e BARBERIA_ADMIN_TOKEN="$(openssl rand -hex 32)" \
+  prenota-salone
+```
+
+The image is `python:3.12-slim`, runs as a non-root user (uid 10001), keeps the
+app files read-only and stores all state in the `/data` volume. Logs go to
+stdout, so `docker logs -f prenota-salone` just works.
+
+### Docker Compose
+
+```bash
+echo "BARBERIA_PANEL_SECRET=$(openssl rand -hex 32)" >> .env
+echo "BARBERIA_ADMIN_TOKEN=$(openssl rand -hex 32)"  >> .env
+docker compose up -d
+```
+
+`salons.json`, `panel_users.json` and `og/` are bind-mounted, so you can add a
+salon or change a passcode and just restart — no rebuild. The DB lives in the
+named volume `prenota_data`.
+
+### systemd (no Docker)
+
+A hardened unit is in `deploy/prenota-salone.service`:
+
+```bash
+sudo useradd --system --home /opt/prenota-salone --shell /usr/sbin/nologin prenota
+sudo mkdir -p /opt/prenota-salone /var/lib/prenota-salone
+sudo cp srv.py app.js index.html panel.html privacy.html salons.json panel_users.json /opt/prenota-salone/
+sudo cp -r og /opt/prenota-salone/
+sudo chown -R prenota:prenota /opt/prenota-salone /var/lib/prenota-salone
+sudo install -m 600 /dev/null /etc/prenota-salone.env   # then edit it (secrets)
+sudo cp deploy/prenota-salone.service /etc/systemd/system/
+sudo systemctl enable --now prenota-salone
+```
+
+The unit sets `ProtectSystem=strict`, `NoNewPrivileges`, `UMask=0077` and only
+grants write access to `/var/lib/prenota-salone`.
+
+### nginx + wildcard subdomains
+
+One server block with a wildcard `server_name` is enough — the app resolves the
+tenant from the `Host` header, so there is nothing per-salon to configure. See
+`deploy/nginx-prenota-salone.conf`. TLS: either a wildcard certificate
+(`certbot ... -d yourdomain -d "*.yourdomain"`) or **Cloudflare Free** in front
+(SSL/TLS mode **Flexible**, since the origin only speaks HTTP). DNS: `A @` and
+`A *` → your server IP; proxy the per-tenant records too.
+
+### Backup
+
+Copy the single `bookings.db` plus `salons.json` and `panel_users.json`.
+That is the entire state.
 
 ## Project layout
 
@@ -119,6 +168,9 @@ salons.json       tenant configuration
 panel_users.json  per-salon hashed passcodes
 og/               social-preview banners (og/<slug>.png, og/<slug>-logo.png)
 panel_hash.py     helper: hash a new passcode
+Dockerfile        container image (non-root, /data volume, stdout logs)
+docker-compose.yml  one-command local/VPS deploy
+deploy/           systemd unit + nginx wildcard-subdomain example
 ```
 
 To rebuild the frontend after editing `App.jsx`:

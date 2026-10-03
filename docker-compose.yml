@@ -1,0 +1,48 @@
+# Prenota Salone — Docker Compose
+#
+# 1) genera i segreti in un file .env accanto a questo file (docker compose lo
+#    carica da solo):
+#      echo "BARBERIA_PANEL_SECRET=$(openssl rand -hex 32)" >> .env
+#      echo "BARBERIA_ADMIN_TOKEN=$(openssl rand -hex 32)"  >> .env
+# 2) docker compose up -d
+# 3) apri http://localhost:8899/  (pannello: /panel, codice demo1234)
+#
+# I file salons.json e panel_users.json sono montati da fuori, così puoi
+# modificare saloni e codici pannello senza ricostruire l'immagine.
+
+services:
+  prenota-salone:
+    build: .
+    image: prenota-salone:latest
+    container_name: prenota-salone
+    restart: unless-stopped
+    ports:
+      - "8899:8899"
+    volumes:
+      # Named volume: creato da Docker con i permessi giusti per l'utente non-root.
+      # Se preferisci una cartella locale: sostituisci con ./data:/data
+      # (creandola prima: mkdir -p data && sudo chown 10001:10001 data)
+      - prenota_data:/data
+      - ./salons.json:/app/salons.json:ro
+      - ./panel_users.json:/app/panel_users.json:ro
+      - ./og:/app/og:ro
+    environment:
+      BARBERIA_HOST: 0.0.0.0
+      BARBERIA_PORT: 8899
+      BARBERIA_DB_PATH: /data/bookings.db
+      BARBERIA_LOG_PATH: stdout
+      BARBERIA_PANEL_SECRET: ${BARBERIA_PANEL_SECRET:-}
+      BARBERIA_ADMIN_TOKEN: ${BARBERIA_ADMIN_TOKEN:-}
+      BARBERIA_SMTP_HOST: ${BARBERIA_SMTP_HOST:-}
+      BARBERIA_SMTP_PORT: ${BARBERIA_SMTP_PORT:-587}
+      BARBERIA_SMTP_LOGIN: ${BARBERIA_SMTP_LOGIN:-}
+      BARBERIA_SMTP_PASSWORD: ${BARBERIA_SMTP_PASSWORD:-}
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request as u,sys; sys.exit(0 if u.urlopen('http://127.0.0.1:8899/salon?slug=demo',timeout=3).status==200 else 1)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
+volumes:
+  prenota_data:

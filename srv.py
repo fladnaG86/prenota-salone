@@ -37,6 +37,7 @@ import sqlite3
 import smtplib
 import time
 import socketserver
+import sys
 import email.utils
 from email.utils import make_msgid, formataddr
 from email.mime.multipart import MIMEMultipart
@@ -106,8 +107,13 @@ try:
 except Exception:
     SLUG_REDIRECTS = {}
 
-logging.basicConfig(filename=LOG_PATH, level=logging.INFO,
-                    format="%(asctime)s %(levelname)s %(message)s")
+# Log su file (default) oppure su stdout se BARBERIA_LOG_PATH=stdout/-.
+# Nei container conviene stdout, cosi' i log si leggono con `docker logs`.
+_LOG_FMT = "%(asctime)s %(levelname)s %(message)s"
+if str(LOG_PATH).strip().lower() in ("-", "stdout"):
+    logging.basicConfig(stream=sys.stdout, level=logging.INFO, format=_LOG_FMT)
+else:
+    logging.basicConfig(filename=LOG_PATH, level=logging.INFO, format=_LOG_FMT)
 
 
 # ------------------------------------------------------------------- salons -
@@ -588,12 +594,18 @@ def reserve(payload, cfg, host="example.com"):
     finally:
         conn.close()
 
-    _send_invites(cfg, date_iso, minutes, svc, data["barber"],
-                  data["notify_email"], client, code, host)
-    return {"ok": True, "sent": 2, "code": code}, None
+    sent = _send_invites(cfg, date_iso, minutes, svc, data["barber"],
+                         data["notify_email"], client, code, host)
+    return {"ok": True, "sent": sent, "code": code}, None
 
 
 def _send_invites(cfg, date_iso, minutes, svc, barber, barber_email, client, code, host="example.com"):
+    """Invia le due email (cliente + salone). Ritorna quante ne sono partite
+    davvero: 2 se inviate, 0 se l'SMTP non e' configurato o l'invio fallisce.
+    La prenotazione resta valida anche senza email."""
+    if not SMTP_PASSWORD:
+        logging.warning("SMTP non configurato: nessuna email inviata per %s", code)
+        return 0
     salon_name = cfg["name"]
     location = "%s, %s" % (salon_name, cfg["address"])
     start = datetime.datetime.combine(
@@ -654,10 +666,11 @@ def _send_invites(cfg, date_iso, minutes, svc, barber, barber_email, client, cod
                 "Nuova prenotazione: %s — %s" % (sname, when_str),
                 body_b, ics_b, filename))
             _mark_email_sent(code)
-            return
+            return 2
         except Exception:
             if attempt == 1:
                 logging.exception("Invio email fallito per codice %s", code)
+    return 0
 
 
 def _mark_email_sent(code):

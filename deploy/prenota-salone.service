@@ -1,0 +1,38 @@
+[Unit]
+Description=Prenota Salone — multi-tenant booking app
+Documentation=https://github.com/fladnaG86/prenota-salone
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=prenota
+Group=prenota
+WorkingDirectory=/opt/prenota-salone
+
+# Secrets and configuration live here (chmod 600, owned by root):
+#   BARBERIA_PANEL_SECRET=...
+#   BARBERIA_ADMIN_TOKEN=...
+#   BARBERIA_DB_PATH=/var/lib/prenota-salone/bookings.db
+#   BARBERIA_LOG_PATH=/var/lib/prenota-salone/server.log
+EnvironmentFile=/etc/prenota-salone.env
+
+ExecStart=/usr/bin/python3 /opt/prenota-salone/srv.py
+Restart=on-failure
+RestartSec=3
+TimeoutStopSec=10
+
+# Hardening
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectControlGroups=true
+RestrictAddressFamilies=AF_INET AF_INET6
+ReadWritePaths=/var/lib/prenota-salone
+
+[Install]
+WantedBy=multi-user.target
