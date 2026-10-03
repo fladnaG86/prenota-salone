@@ -1,5 +1,9 @@
 # Prenota Salone — online booking for barbershops & salons
 
+[![Docker image](https://github.com/fladnaG86/prenota-salone/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/fladnaG86/prenota-salone/actions/workflows/docker-publish.yml)
+![License: MIT](https://img.shields.io/badge/license-MIT-blue)
+![Python 3.8+](https://img.shields.io/badge/python-3.8%2B-blue)
+
 A tiny, self-contained **multi-tenant online booking app** for barbershops and
 hair salons. One Python file (stdlib only) + SQLite serves the web app **and**
 the JSON API. No framework, no build step for the backend, no external services
@@ -97,6 +101,19 @@ See `.env.example`.
 ## Deploy
 
 ### Docker (quickest)
+
+A prebuilt image is published to GitHub Container Registry on every release:
+
+```bash
+docker pull ghcr.io/fladnag86/prenota-salone:latest
+docker run -d --name prenota-salone -p 8899:8899 \
+  -v prenota_data:/data \
+  -e BARBERIA_PANEL_SECRET="$(openssl rand -hex 32)" \
+  -e BARBERIA_ADMIN_TOKEN="$(openssl rand -hex 32)" \
+  ghcr.io/fladnag86/prenota-salone:latest
+```
+
+Or build it yourself:
 
 ```bash
 docker build -t prenota-salone .
