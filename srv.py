@@ -358,7 +358,9 @@ def availability(dates, cfg):
     occ = {}
     for r in rows:
         dur = r["duration"] or 30
-        occ.setdefault(r["date"], []).append((r["minutes"], r["minutes"] + dur))
+        # il GROUP BY aggrega le prenotazioni identiche: va contato "c", non 1
+        occ.setdefault(r["date"], []).append(
+            (r["minutes"], r["minutes"] + dur, r["c"]))
     out = []
     for d in dates:
         cap = seat_capacity(d, cfg)
@@ -368,7 +370,7 @@ def availability(dates, cfg):
         busy = occ.get(d, [])
         slots = []
         for m in slot_minutes(d, cfg):
-            n = sum(1 for (s, e) in busy if s <= m < e)
+            n = sum(c for (s, e, c) in busy if s <= m < e)
             slots.append({"minutes": m, "cap": cap, "free": max(0, cap - n)})
         out.append({"date": d, "closed": False, "slots": slots})
     return out
@@ -806,12 +808,18 @@ def payment_lines(pay):
     return out
 
 
-def _piva(cfg):
-    """'P.IVA 04821960168' senza duplicare l'etichetta se e' gia' nel config."""
+def _piva_number(cfg):
+    """Solo il numero di P.IVA, senza etichetta (per la tabella HTML)."""
     v = str(cfg.get("piva") or "").strip()
     if not v:
         return ""
-    return v if v.lower().replace(" ", "").startswith("p.iva") else "P.IVA " + v
+    return re.sub(r"^p\.?\s*iva\s*:?\s*", "", v, flags=re.I).strip()
+
+
+def _piva(cfg):
+    """'P.IVA 04821960168' senza duplicare l'etichetta se e' gia' nel config."""
+    n = _piva_number(cfg)
+    return ("P.IVA " + n) if n else ""
 
 
 def receipt_lines(cfg, b):
@@ -863,8 +871,8 @@ def receipt_html(cfg, b):
     ]
     if cfg.get("address"):
         rows.append(("Indirizzo", cfg["address"]))
-    if _piva(cfg):
-        rows.append(("P.IVA", _piva(cfg)))
+    if _piva_number(cfg):
+        rows.append(("P.IVA", _piva_number(cfg)))
     rows += [
         ("Cliente", b.get("client_name") or ""),
         ("Prestazione", "%s (%d minuti)" % (b.get("service_name") or "",

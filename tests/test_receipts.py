@@ -11,6 +11,7 @@ import http.cookiejar
 import json
 import os
 import pathlib
+import re
 import sqlite3
 import sys
 import tempfile
@@ -458,6 +459,45 @@ class ReceiptTest(unittest.TestCase):
             self.assertEqual(len(mails_to("grace@example.com")), 1)
         finally:
             srv.AUTO_RECEIPT_GRACE_MIN = old
+
+    # ------------------------------------- regressioni scoperte dalle prove
+    def test_availability_conta_tutte_le_prenotazioni_sullo_stesso_slot(self):
+        # GROUP BY aggrega le prenotazioni identiche: i posti liberi devono
+        # riflettere il conteggio, non contare il gruppo una volta sola.
+        d = next_open_date()
+        cap = srv.seat_capacity(d, CFG)
+        n = min(2, cap)
+        for i in range(n):
+            res = book("req-av-%d" % i, date_iso=d, minutes=1140,
+                       name="Av %d" % i, email="av%d@example.com" % i)
+            self.assertTrue(res.get("ok"), res)
+        av = srv.availability([d], CFG)[0]
+        slot = [s for s in av["slots"] if s["minutes"] == 1140][0]
+        self.assertEqual(slot["free"], cap - n,
+                         "posti liberi sottostimati con prenotazioni sullo stesso slot")
+        self.assertEqual(slot["cap"], cap)
+
+    def test_piva_non_duplica_l_etichetta_nell_html(self):
+        b = {"id": 3, "date": "2026-03-05", "minutes": 600, "duration": 30,
+             "service_name": "Taglio", "barber": "Marco", "code": "BL-XX",
+             "client_name": "Tizio", "price": 25, "payment_status": "unpaid"}
+        for raw in ("04821960168", "P.IVA 04821960168", "p.iva: 04821960168"):
+            cfg = {"slug": "x", "name": "Salone", "address": "", "piva": raw,
+                   "payment": {}}
+            txt = "\n".join(srv.receipt_lines(cfg, b))
+            self.assertIn("P.IVA 04821960168", txt)
+            self.assertNotIn("P.IVA P.IVA", txt)
+            self.assertNotIn("p.iva", txt.lower().replace("p.iva 04821960168", ""))
+            html = srv.receipt_html(cfg, b)
+            m = re.search(r"<td[^>]*>P\.IVA</td><td[^>]*>(.*?)</td>", html)
+            self.assertIsNotNone(m, "riga P.IVA assente")
+            self.assertEqual(m.group(1), "<b>04821960168</b>",
+                             "l'etichetta P.IVA non deve ripetersi nel valore")
+        # senza piva: nessuna riga
+        cfg = {"slug": "x", "name": "Salone", "address": "", "piva": "",
+               "payment": {}}
+        self.assertNotIn("P.IVA", srv.receipt_html(cfg, b))
+        self.assertNotIn("P.IVA", "\n".join(srv.receipt_lines(cfg, b)))
 
     # ----------------------------------------------------- config pagamento
     def test_payment_lines_normalizza_paypal(self):
