@@ -13,6 +13,8 @@ Mantiene tutti gli hardening:
   - credenziali SMTP da env; UID/codice da sha256
   - .ics con folding RFC 5545, escape CRLF e TZID Europe/Rome
   - html.escape + sanitizzazione header; catalogo servizi server-side
+  - ricevuta di avvenuta prestazione automatica alla chiusura (cliente) e
+    notifica di pagamento in sospeso al salone (IBAN / PayPal / Satispay)
   - WAL + busy_timeout; retry email; log su file; DB chmod 600
 
 Interfacce:
@@ -22,6 +24,9 @@ Interfacce:
   GET  /availability?date=..&salon=X      slot reali per salone
   GET  /bookings                          (X-Admin-Token)
   POST /book                              riserva (richiede campo salon)
+  POST /panel/complete                    chiude la prestazione (ricevuta automatica)
+  POST /panel/paid                        segna il pagamento come incassato
+  POST /panel/list|/panel/cancel|...      pannello barbiere (cookie di sessione)
 
 Uso:  BARBERIA_SMTP_PASSWORD=.. BARBERIA_ADMIN_TOKEN=.. python3 srv.py
 """
@@ -38,6 +43,7 @@ import smtplib
 import time
 import socketserver
 import sys
+import threading
 import email.utils
 from email.utils import make_msgid, formataddr
 from email.mime.multipart import MIMEMultipart
@@ -77,6 +83,13 @@ DEFAULT_SALON = {
     "address": "Via Cesare Battisti 24, 20134 Milano",
     "phone": "0245318890", "web": "", "instagram": "",
     "notify_email": "info@salonedemo.it", "note_web": "",
+    "piva": "",
+    # Coordinate di pagamento del salone (facoltative): se compilate finiscono
+    # nella ricevuta inviata al cliente. Non inventare valori reali.
+    "payment": {
+        "iban": "", "holder": "", "paypal": "", "satispay": "",
+        "methods": "Contanti, bancomat o carta in salone", "note": "",
+    },
     "services": {
         "taglio":       {"name": "Taglio classico",        "min": 30, "price": 22},
         "taglio-barba": {"name": "Taglio + barba",         "min": 50, "price": 38},
@@ -101,6 +114,13 @@ SMTP_CFG = {
 }
 ADMIN_TOKEN = os.environ.get("BARBERIA_ADMIN_TOKEN", "")
 
+# Ricevuta di avvenuta prestazione. La ricevuta parte in automatico appena la
+# prestazione viene chiusa (dal pannello o dal worker). Il worker di fondo, che
+# chiude da solo le prenotazioni terminate, si attiva con BARBERIA_AUTO_RECEIPT=1.
+AUTO_RECEIPT = os.environ.get("BARBERIA_AUTO_RECEIPT", "0").strip().lower() in (
+    "1", "true", "yes", "on")
+AUTO_RECEIPT_GRACE_MIN = int(os.environ.get("BARBERIA_AUTO_RECEIPT_GRACE_MIN", "15"))
+
 # Redirect 301 dei sottodomini rinominati: {"vecchio-slug": "slug-canonico"}.
 try:
     SLUG_REDIRECTS = json.loads(os.environ.get("BARBERIA_SLUG_REDIRECTS", "{}")) or {}
@@ -117,6 +137,26 @@ else:
 
 
 # ------------------------------------------------------------------- salons -
+def _clean_payment(p):
+    """Normalizza il blocco "payment" del salone: stringhe, una riga, corte."""
+    out = {}
+    for k in ("iban", "holder", "paypal", "satispay", "methods", "note"):
+        v = (p or {}).get(k, "")
+        out[k] = re.sub(r"[\r\n\x00-\x1f\x7f]", " ", str(v or "")).strip()[:200]
+    return out
+
+
+def _merge_payment(base, extra):
+    """Unisce i default di pagamento con quelli del salone: un campo vuoto nel
+    salone NON cancella il default (cosi' i saloni che non configurano nulla
+    ereditano le coordinate condivise)."""
+    out = dict(base)
+    for k, v in _clean_payment(extra).items():
+        if v:
+            out[k] = v
+    return out
+
+
 def _svc_list_to_dict(svcs):
     out = {}
     for sv in svcs:
@@ -137,6 +177,8 @@ def _load_salons():
     defaults = data.get("defaults", {})
     default_svcs = _svc_list_to_dict(defaults.get("services", []))
     default_hours = {int(k): tuple(v) for k, v in defaults.get("hours", {}).items()}
+    default_payment = _merge_payment(_clean_payment(DEFAULT_SALON["payment"]),
+                                     defaults.get("payment"))
     salons = {"lambrate": DEFAULT_SALON}
     for s in data.get("salons", []):
         slug = s.get("slug")
@@ -155,6 +197,8 @@ def _load_salons():
             "instagram": s.get("instagram", ""),
             "notify_email": s.get("notify_email", DEFAULT_SALON["notify_email"]),
             "note_web": s.get("note_web", ""),
+            "piva": s.get("piva", ""),
+            "payment": _merge_payment(default_payment, s.get("payment")),
             "cap": s.get("cap"),
             "siblings": s.get("siblings") or [],
             "services": services or DEFAULT_SALON["services"],
@@ -265,7 +309,12 @@ def init_db():
     existing = {row[1] for row in conn.execute("PRAGMA table_info(bookings)")}
     for col, ddl in (("code", "TEXT"), ("email_sent", "INTEGER DEFAULT 0"),
                      ("salon", "TEXT NOT NULL DEFAULT 'lambrate'"),
-                     ("consent", "INTEGER DEFAULT 0")):
+                     ("consent", "INTEGER DEFAULT 0"),
+                     ("completed_at", "TEXT"),
+                     ("payment_status", "TEXT DEFAULT 'unpaid'"),
+                     ("paid_at", "TEXT"),
+                     ("receipt_sent", "INTEGER DEFAULT 0"),
+                     ("receipt_sent_at", "TEXT")):
         if col not in existing:
             conn.execute("ALTER TABLE bookings ADD COLUMN %s %s" % (col, ddl))
     conn.execute("CREATE INDEX IF NOT EXISTS idx_slot "
@@ -303,7 +352,7 @@ def availability(dates, cfg):
     ph = ", ".join("?" * len(dates))
     rows = conn.execute(
             "SELECT date, minutes, duration, COUNT(*) c FROM bookings "
-            "WHERE status='confirmed' AND salon=? AND date IN (%s) "
+            "WHERE status IN ('confirmed','completed') AND salon=? AND date IN (%s) "
             "GROUP BY date, minutes, duration" % ph, [salon] + dates).fetchall()
     conn.close()
     occ = {}
@@ -386,26 +435,42 @@ def clean_header(s):
     return re.sub(r"[\r\n\x00-\x1f\x7f]", " ", str(s)).strip()
 
 
-def build_message(to_name, to_email, subject, body_html, ics_bytes, filename):
+def build_message(to_name, to_email, subject, body_html, ics_bytes=None, filename=None,
+                  from_name="Barberia Lambrate Prenotazioni",
+                  plain_fallback="Email HTML con allegato calendario .ics da aprire."):
+    """Messaggio multipart; l'allegato e' facoltativo (.ics, .txt o binario)."""
     msg = MIMEMultipart("mixed")
-    msg["From"] = formataddr((clean_header("Barberia Lambrate Prenotazioni"),
-                              SMTP_CFG["login"]))
+    msg["From"] = formataddr((clean_header(from_name), SMTP_CFG["login"]))
     msg["To"] = formataddr((clean_header(to_name), to_email))
     msg["Subject"] = clean_header(subject)
     msg["Date"] = email.utils.formatdate()
     msg["Message-ID"] = make_msgid()
     alt = MIMEMultipart("alternative")
-    alt.attach(MIMEText("Email HTML con allegato calendario .ics da aprire.",
-                        "plain", "utf-8"))
+    alt.attach(MIMEText(plain_fallback, "plain", "utf-8"))
     alt.attach(MIMEText(body_html, "html", "utf-8"))
     msg.attach(alt)
-    att = MIMEBase("text", "calendar", method="PUBLISH")
-    att.set_payload(ics_bytes)
-    att.add_header("Content-Type",
-                   'text/calendar; charset="utf-8"; method=PUBLISH; name="%s"' % filename)
-    att.add_header("Content-Disposition", 'attachment; filename="%s"' % filename)
-    encoders.encode_base64(att)
-    msg.attach(att)
+    if ics_bytes is not None:
+        fname = filename or "allegato.dat"
+        ext = fname.rsplit(".", 1)[-1].lower()
+        if ext == "ics":
+            att = MIMEBase("text", "calendar", method="PUBLISH")
+            att.set_payload(ics_bytes)
+            att.add_header("Content-Type",
+                           'text/calendar; charset="utf-8"; method=PUBLISH; name="%s"'
+                           % fname)
+        elif ext == "txt":
+            att = MIMEBase("text", "plain")
+            att.set_payload(ics_bytes)
+            att.add_header("Content-Type",
+                           'text/plain; charset="utf-8"; name="%s"' % fname)
+        else:
+            att = MIMEBase("application", "octet-stream")
+            att.set_payload(ics_bytes)
+            att.add_header("Content-Type",
+                           'application/octet-stream; name="%s"' % fname)
+        att.add_header("Content-Disposition", 'attachment; filename="%s"' % fname)
+        encoders.encode_base64(att)
+        msg.attach(att)
     return msg
 
 
@@ -560,7 +625,7 @@ def reserve(payload, cfg, host="example.com"):
         new_end = minutes + int(svc["min"])
         taken = conn.execute(
             "SELECT COUNT(*) FROM bookings WHERE salon=? AND date=? "
-            "AND status='confirmed' AND minutes < ? AND minutes + duration > ?",
+            "AND status IN ('confirmed','completed') AND minutes < ? AND minutes + duration > ?",
             (salon, date_iso, new_end, minutes)).fetchone()[0]
         if taken >= cap:
             dup = conn.execute("SELECT COUNT(*) FROM bookings WHERE request_id=?",
@@ -681,6 +746,366 @@ def _mark_email_sent(code):
         conn.close()
     except Exception:
         pass
+
+
+# ------------------------------------------- prestazione completata / ricevuta -
+def _euro(n):
+    """Importo in euro con la virgola: 38 -> '€ 38,00'."""
+    try:
+        n = int(n or 0)
+    except (TypeError, ValueError):
+        n = 0
+    return "\u20ac %d,00" % n
+
+
+def receipt_number(b):
+    """Numero progressivo della ricevuta, derivato da anno + id prenotazione."""
+    year = str(b.get("date") or "")[:4] or str(datetime.date.today().year)
+    try:
+        n = int(b.get("id") or 0)
+    except (TypeError, ValueError):
+        n = 0
+    return "%s-%05d" % (year, n)
+
+
+def booking_when(b):
+    """'giovedì 8 ottobre alle 17:30' a partire dalla riga prenotazione."""
+    try:
+        minutes = int(b.get("minutes") or 0)
+        start = datetime.datetime.combine(
+            datetime.date.fromisoformat(str(b.get("date"))),
+            datetime.time(minutes // 60, minutes % 60))
+    except Exception:
+        return str(b.get("date") or "")
+    return "%s alle %s" % (italian_long(start), start.strftime("%H:%M"))
+
+
+def payment_lines(pay):
+    """Righe di pagamento (IBAN, PayPal, Satispay, in salone) per email e ricevuta."""
+    pay = pay or {}
+    out = []
+    if pay.get("iban"):
+        val = "IBAN " + pay["iban"]
+        if pay.get("holder"):
+            val += " \u2014 intestatario: " + pay["holder"]
+        out.append({"label": "Bonifico bancario", "value": val, "href": None})
+    if pay.get("paypal"):
+        v = str(pay["paypal"]).strip()
+        if v.lower().startswith("http"):
+            out.append({"label": "PayPal", "value": v, "href": v})
+        elif "@" in v:
+            out.append({"label": "PayPal", "value": "invia il pagamento a " + v,
+                        "href": "mailto:" + v})
+        else:
+            url = "https://paypal.me/" + v.lstrip("/")
+            out.append({"label": "PayPal", "value": url, "href": url})
+    if pay.get("satispay"):
+        out.append({"label": "Satispay", "value": pay["satispay"], "href": None})
+    if pay.get("methods"):
+        out.append({"label": "In salone", "value": pay["methods"], "href": None})
+    return out
+
+
+def _piva(cfg):
+    """'P.IVA 04821960168' senza duplicare l'etichetta se e' gia' nel config."""
+    v = str(cfg.get("piva") or "").strip()
+    if not v:
+        return ""
+    return v if v.lower().replace(" ", "").startswith("p.iva") else "P.IVA " + v
+
+
+def receipt_lines(cfg, b):
+    """Ricevuta di avvenuta prestazione in formato testo (allegato .txt)."""
+    pay = _clean_payment(cfg.get("payment"))
+    paid = (b.get("payment_status") == "paid")
+    out = [
+        "RICEVUTA DI AVVENUTA PRESTAZIONE",
+        "Documento non fiscale \u2014 non valido ai fini IVA o fiscali.",
+        "",
+        "Numero: %s" % receipt_number(b),
+        "Prestazione del: %s" % booking_when(b),
+        "Salone: %s" % (cfg.get("name") or ""),
+    ]
+    if cfg.get("address"):
+        out.append("Indirizzo: %s" % cfg["address"])
+    if _piva(cfg):
+        out.append(_piva(cfg))
+    out += [
+        "",
+        "Cliente: %s" % (b.get("client_name") or ""),
+        "Prestazione: %s (%d minuti)" % (b.get("service_name") or "",
+                                         int(b.get("duration") or 30)),
+        "Barbiere: %s" % (b.get("barber") or ""),
+        "Codice prenotazione: %s" % (b.get("code") or ""),
+        "",
+        "IMPORTO: %s" % _euro(b.get("price")),
+        "STATO: %s" % ("PAGATO \u2014 grazie" if paid else "DA PAGARE"),
+    ]
+    if not paid:
+        out += ["", "Come pagare:"]
+        for pl in payment_lines(pay):
+            out.append("- %s: %s" % (pl["label"], pl["value"]))
+        out.append("Causale consigliata: %s" % (b.get("code") or ""))
+        if pay.get("note"):
+            out.append("Nota: %s" % pay["note"])
+    out += ["", "Grazie e a presto,", str(cfg.get("name") or "")]
+    return out
+
+
+def receipt_html(cfg, b):
+    """Corpo HTML della ricevuta inviata al cliente."""
+    pay = _clean_payment(cfg.get("payment"))
+    paid = (b.get("payment_status") == "paid")
+    rows = [
+        ("Numero", receipt_number(b)),
+        ("Prestazione del", booking_when(b)),
+        ("Salone", cfg.get("name") or ""),
+    ]
+    if cfg.get("address"):
+        rows.append(("Indirizzo", cfg["address"]))
+    if _piva(cfg):
+        rows.append(("P.IVA", _piva(cfg)))
+    rows += [
+        ("Cliente", b.get("client_name") or ""),
+        ("Prestazione", "%s (%d minuti)" % (b.get("service_name") or "",
+                                            int(b.get("duration") or 30))),
+        ("Barbiere", b.get("barber") or ""),
+        ("Codice prenotazione", b.get("code") or ""),
+    ]
+    table = "".join("<tr><td style='padding:3px 10px 3px 0;color:#6b6b6b'>%s</td>"
+                    "<td style='padding:3px 0'><b>%s</b></td></tr>" % (_esc(k), _esc(v))
+                    for k, v in rows)
+    pay_rows = []
+    for pl in payment_lines(pay):
+        val = _esc(pl["value"])
+        if pl["href"]:
+            val = "<a href='%s'>%s</a>" % (_esc(pl["href"]), val)
+        pay_rows.append("<li><b>%s</b>: %s</li>" % (_esc(pl["label"]), val))
+    pay_block = ""
+    if not paid:
+        pay_block = ("<p><b>Importo da pagare:</b> <span style='font-size:19px'>%s</span>"
+                     "<br><b>Stato:</b> da pagare</p><ul>%s</ul>"
+                     "<p>Indica il codice <b>%s</b> nella causale del pagamento."
+                     "%s</p>") % (_euro(b.get("price")), "".join(pay_rows),
+                                  _esc(b.get("code") or ""),
+                                  "<br>Nota: " + _esc(pay["note"]) if pay.get("note") else "")
+    else:
+        pay_block = ("<p><b>Importo:</b> %s<br><b>Stato:</b> "
+                     "<span style='color:#24744D'>pagato \u2014 grazie</span></p>"
+                     ) % _euro(b.get("price"))
+    return ("<div style=\"font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,"
+            "sans-serif;color:#1d1813;font-size:15px;line-height:1.55\">"
+            "<p style='color:#6b6b6b;font-size:12px;letter-spacing:.08em;"
+            "text-transform:uppercase;margin:0 0 2px'>Ricevuta di avvenuta prestazione</p>"
+            "<h2 style='margin:0 0 4px'>%s</h2>"
+            "<p style='margin:0 0 14px;color:#6b6b6b'>Documento <b>non fiscale</b>: "
+            "non valido ai fini IVA o fiscali.</p>"
+            "<table style='border-collapse:collapse'>%s</table>"
+            "%s"
+            "<p style='margin-top:16px;color:#6b6b6b'>Questa ricevuta \u00e8 allegata "
+            "anche come file di testo. Grazie e a presto!</p></div>"
+            ) % (_esc(cfg.get("name") or ""), table, pay_block)
+
+
+def barber_payment_html(cfg, b):
+    """Corpo HTML della notifica di pagamento in sospeso inviata al salone."""
+    paid = (b.get("payment_status") == "paid")
+    rows = [
+        ("Cliente", b.get("client_name") or ""),
+        ("Telefono", b.get("client_phone") or ""),
+        ("Email", b.get("client_email") or ""),
+        ("Prestazione", "%s (%d minuti)" % (b.get("service_name") or "",
+                                            int(b.get("duration") or 30))),
+        ("Barbiere", b.get("barber") or ""),
+        ("Quando", booking_when(b)),
+        ("Codice", b.get("code") or ""),
+    ]
+    table = "".join("<tr><td style='padding:3px 10px 3px 0;color:#6b6b6b'>%s</td>"
+                    "<td style='padding:3px 0'><b>%s</b></td></tr>" % (_esc(k), _esc(v))
+                    for k, v in rows)
+    state = ("<span style='color:#24744D'>incassato</span>" if paid
+             else "<span style='color:#B63132'>IN SOSPESO \u2014 da incassare</span>")
+    return ("<div style=\"font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,"
+            "sans-serif;color:#1d1813;font-size:15px;line-height:1.55\">"
+            "<p style='color:#6b6b6b;font-size:12px;letter-spacing:.08em;"
+            "text-transform:uppercase;margin:0 0 2px'>Prestazione completata</p>"
+            "<h2 style='margin:0 0 10px'>Importo %s \u2014 %s</h2>"
+            "<table style='border-collapse:collapse'>%s</table>"
+            "<p style='margin-top:14px'>%s</p>"
+            "<p style='margin-top:10px;color:#6b6b6b'>%s</p></div>"
+            ) % (_euro(b.get("price")), state, table,
+                 "Pagamento gi\u00e0 ricevuto." if paid
+                 else "Riceverai una notifica a ogni prestazione chiusa in sospeso.",
+                 "La ricevuta \u00e8 stata inviata al cliente." if paid
+                 else "La ricevuta \u00e8 stata inviata al cliente. Segna l'incasso dal "
+                      "pannello (<b>/panel</b>) per chiudere la partita.")
+
+
+def _mark_receipt_sent(code):
+    try:
+        conn = connect()
+        conn.execute("UPDATE bookings SET receipt_sent=1, "
+                     "receipt_sent_at=datetime('now') WHERE code=?", (code,))
+        conn.commit()
+        conn.close()
+    except Exception:
+        pass
+
+
+def _send_receipts(cfg, b, trigger="panel"):
+    """Invia la ricevuta al cliente e la notifica di pagamento in sospeso al
+    salone. Ritorna quante email sono partite (0..2), 0 se l'SMTP non e'
+    configurato o l'invio fallisce: la prenotazione resta comunque chiusa e
+    la ricevuta pu\u00f2 essere reinviata dal pannello."""
+    code = b.get("code") or ""
+    if not SMTP_PASSWORD:
+        logging.warning("SMTP non configurato: ricevuta non inviata per %s", code)
+        return 0
+    salon_name = cfg.get("name") or ""
+    svc = str(b.get("service_name") or "")
+    client_email = str(b.get("client_email") or "").strip()
+    amount = _euro(b.get("price"))
+    sent = 0
+    if EMAIL_RE.fullmatch(client_email):
+        try:
+            txt = ("\n".join(receipt_lines(cfg, b)) + "\n").encode("utf-8")
+            msg = build_message(
+                b.get("client_name") or "", client_email,
+                "Ricevuta di avvenuta prestazione \u2014 %s" % svc,
+                receipt_html(cfg, b), txt, "ricevuta-%s.txt" % (code or "salone"),
+                from_name="%s \u2014 Ricevute" % salon_name,
+                plain_fallback="Ricevuta di avvenuta prestazione (documento non fiscale) "
+                               "in allegato.")
+            send_email(client_email, msg)
+            sent += 1
+        except Exception:
+            logging.exception("Ricevuta cliente non inviata per %s", code)
+    else:
+        logging.warning("Ricevuta cliente non inviata (email assente) per %s", code)
+    notify = str(cfg.get("notify_email") or "").strip()
+    if EMAIL_RE.fullmatch(notify):
+        paid = (b.get("payment_status") == "paid")
+        try:
+            subj = ("Prestazione completata \u2014 %s %s (%s)"
+                    % ("incassato" if paid else "pagamento in sospeso", amount, code))
+            msg = build_message(
+                salon_name, notify, subj, barber_payment_html(cfg, b),
+                from_name="%s \u2014 Ricevute" % salon_name,
+                plain_fallback="Prestazione %s: importo %s, %s."
+                               % (code, amount,
+                                  "incassato" if paid else "in sospeso / da incassare"))
+            send_email(notify, msg)
+            sent += 1
+        except Exception:
+            logging.exception("Notifica incasso non inviata per %s", code)
+    else:
+        logging.warning("Notifica salone non inviata (notify_email assente) per %s", code)
+    if sent:
+        _mark_receipt_sent(code)
+    logging.info("Ricevuta %s: %d email inviate (%s)", code, sent, trigger)
+    return sent
+
+
+def complete_booking(cfg, value, by="id", paid=False, resend=False, trigger="panel"):
+    """Chiude la prestazione e manda in automatico la ricevuta al cliente e la
+    notifica di pagamento al salone.
+
+    by="id" (pannello) oppure "code". paid=True segna subito l'incasso.
+    resend=True reinvia anche se la ricevuta era gi\u00e0 partita. chiamate
+    ripetute non duplicano l'email (a meno di resend)."""
+    init_db()
+    salon = cfg["slug"]
+    col = "code" if by == "code" else "id"
+    conn = connect()
+    conn.row_factory = sqlite3.Row
+    row = conn.execute("SELECT * FROM bookings WHERE salon=? AND %s=?" % col,
+                       (salon, value)).fetchone()
+    if row is None:
+        conn.close()
+        return {"ok": False, "error": "prenotazione non trovata"}
+    b = dict(row)
+    if b.get("status") == "completed" and b.get("receipt_sent") and not resend:
+        conn.close()
+        return {"ok": True, "already": True, "sent": 0, "code": b.get("code"),
+                "price": b.get("price"),
+                "error": "prestazione gi\u00e0 chiusa e ricevuta gi\u00e0 inviata"}
+    now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    pay_status = "paid" if paid else (b.get("payment_status") or "unpaid")
+    paid_at = now if pay_status == "paid" else b.get("paid_at")
+    conn.execute("UPDATE bookings SET status='completed', "
+                 "completed_at=COALESCE(completed_at,?), payment_status=?, paid_at=? "
+                 "WHERE salon=? AND id=?",
+                 (now, pay_status, paid_at, salon, b["id"]))
+    conn.commit()
+    conn.close()
+    b.update({"status": "completed", "payment_status": pay_status, "paid_at": paid_at})
+    sent = _send_receipts(cfg, b, trigger=trigger)
+    return {"ok": True, "sent": sent, "code": b.get("code"), "id": b["id"],
+            "price": b.get("price"), "amount": _euro(b.get("price")),
+            "paid": pay_status == "paid", "trigger": trigger,
+            "receipt_sent": bool(b.get("receipt_sent") or sent)}
+
+
+def mark_payment(cfg, value, by="id", paid=True):
+    """Segna un pagamento come incassato (o di nuovo in sospeso)."""
+    init_db()
+    salon = cfg["slug"]
+    col = "code" if by == "code" else "id"
+    conn = connect()
+    row = conn.execute("SELECT id, code, price FROM bookings WHERE salon=? AND %s=?" % col,
+                       (salon, value)).fetchone()
+    if row is None:
+        conn.close()
+        return {"ok": False, "error": "prenotazione non trovata"}
+    now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    conn.execute("UPDATE bookings SET payment_status=?, paid_at=? WHERE salon=? AND id=?",
+                 ("paid" if paid else "unpaid", now if paid else None, salon, row[0]))
+    conn.commit()
+    conn.close()
+    return {"ok": True, "paid": bool(paid), "code": row[1], "price": row[2],
+            "amount": _euro(row[2])}
+
+
+def auto_complete_due():
+    """Chiude le prenotazioni terminate e invia le ricevute (worker opt-in)."""
+    init_db()
+    cutoff = datetime.datetime.now() - datetime.timedelta(
+        minutes=max(0, AUTO_RECEIPT_GRACE_MIN))
+    conn = connect()
+    conn.row_factory = sqlite3.Row
+    rows = conn.execute("SELECT * FROM bookings WHERE status='confirmed' "
+                        "ORDER BY date ASC, minutes ASC").fetchall()
+    conn.close()
+    done = 0
+    for r in rows:
+        b = dict(r)
+        try:
+            minutes = int(b.get("minutes") or 0)
+            start = datetime.datetime.combine(
+                datetime.date.fromisoformat(str(b.get("date"))),
+                datetime.time(minutes // 60, minutes % 60))
+        except Exception:
+            continue
+        if start + datetime.timedelta(minutes=int(b.get("duration") or 30)) > cutoff:
+            continue
+        cfg = get_salon(b.get("salon") or "")
+        if not cfg:
+            continue
+        if complete_booking(cfg, b["id"], by="id", trigger="auto").get("sent"):
+            done += 1
+    if done:
+        logging.info("Auto-ricevuta: chiuse e notificate %d prestazioni", done)
+    return done
+
+
+def auto_receipt_worker():
+    """Giro di fondo: ogni 2 minuti cerca le prestazioni terminate."""
+    while True:
+        try:
+            auto_complete_due()
+        except Exception:
+            logging.exception("Auto-ricevuta: errore nel giro")
+        time.sleep(120)
 
 
 def italian_long(dt):
@@ -978,7 +1403,8 @@ document.getElementById('go').onclick=doIt;
         conn.row_factory = sqlite3.Row
         rows = conn.execute(
             "SELECT salon, date, minutes, service_name, barber, client_name, "
-            "client_phone, client_email, status, code, email_sent, created_at "
+            "client_phone, client_email, status, price, payment_status, "
+            "completed_at, paid_at, receipt_sent, code, email_sent, created_at "
             "FROM bookings ORDER BY id DESC LIMIT ?", (limit,)).fetchall()
         conn.close()
         return [dict(r) for r in rows]
@@ -1036,9 +1462,46 @@ document.getElementById('go').onclick=doIt;
                 self._json(401, {"ok": False, "error": "non autenticato"})
                 return
             if path == "/panel/list":
+                bookings = panel_bookings(salon)
+                pending = [x for x in bookings if x.get("status") == "completed"
+                           and x.get("payment_status") != "paid"]
                 self._json(200, {"ok": True, "salon": salon,
                                  "name": (get_salon(salon) or {}).get("name", salon),
-                                 "bookings": panel_bookings(salon)})
+                                 "bookings": bookings,
+                                 "auto_receipt": AUTO_RECEIPT,
+                                 "payments": {
+                                     "pending_count": len(pending),
+                                     "pending_total": sum(int(x.get("price") or 0)
+                                                          for x in pending)}})
+                return
+            if path == "/panel/complete":
+                cfg = get_salon(salon)
+                if not cfg:
+                    self._json(404, {"ok": False, "error": "salone non trovato"})
+                    return
+                value = payload.get("code") or payload.get("id")
+                if value in (None, ""):
+                    self._json(400, {"ok": False, "error": "serve 'id' o 'code'"})
+                    return
+                res = complete_booking(cfg, value,
+                                       by=("code" if payload.get("code") else "id"),
+                                       paid=bool(payload.get("paid")),
+                                       resend=bool(payload.get("resend")))
+                self._json(200 if res.get("ok") else 404, res)
+                return
+            if path == "/panel/paid":
+                cfg = get_salon(salon)
+                if not cfg:
+                    self._json(404, {"ok": False, "error": "salone non trovato"})
+                    return
+                value = payload.get("code") or payload.get("id")
+                if value in (None, ""):
+                    self._json(400, {"ok": False, "error": "serve 'id' o 'code'"})
+                    return
+                res = mark_payment(cfg, value,
+                                   by=("code" if payload.get("code") else "id"),
+                                   paid=bool(payload.get("paid", True)))
+                self._json(200 if res.get("ok") else 404, res)
                 return
             if path == "/panel/cancel":
                 value = payload.get("code") or payload.get("id")
@@ -1091,7 +1554,7 @@ document.getElementById('go').onclick=doIt;
                 conn.execute("BEGIN IMMEDIATE")
                 taken = conn.execute(
                     "SELECT COUNT(*) FROM bookings WHERE salon=? AND date=? "
-                    "AND status='confirmed' AND id<>? AND minutes < ? AND minutes + duration > ?",
+                    "AND status IN ('confirmed','completed') AND id<>? AND minutes < ? AND minutes + duration > ?",
                     (salon, ndate, bid, new_end, ntime)).fetchone()[0]
                 if taken >= cap:
                     conn.rollback()
@@ -1215,7 +1678,8 @@ def panel_bookings(salon):
     conn.row_factory = sqlite3.Row
     rows = conn.execute(
         "SELECT id, code, date, minutes, service_name, duration, price, "
-        "barber, client_name, client_phone, note, status, created_at "
+        "barber, client_name, client_phone, client_email, note, status, "
+        "payment_status, completed_at, paid_at, receipt_sent, created_at "
         "FROM bookings WHERE salon=? ORDER BY date ASC, minutes ASC",
         (salon,)).fetchall()
     conn.close()
@@ -1224,6 +1688,10 @@ def panel_bookings(salon):
 
 if __name__ == "__main__":
     init_db()
+    if AUTO_RECEIPT:
+        threading.Thread(target=auto_receipt_worker, daemon=True).start()
+        logging.info("Auto-ricevuta ATTIVA: chiudo le prestazioni %d min dopo la fine",
+                     AUTO_RECEIPT_GRACE_MIN)
     logging.info("Avvio multi-tenant su 0.0.0.0:%d | saloni=%d | SMTP=%s | admin=%s",
                  PORT, len(SALONS), "ok" if SMTP_PASSWORD else "DISATTIVATO",
                  "protetto" if ADMIN_TOKEN else "NON CONFIGURATO")

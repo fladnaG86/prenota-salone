@@ -38,6 +38,14 @@
         "price": 14
       }
     ],
+    "payment": {
+      "methods": "Contanti, bancomat o carta in salone",
+      "iban": "",
+      "holder": "",
+      "paypal": "",
+      "satispay": "",
+      "note": ""
+    },
     "hours": {
       "1": [
         540,
@@ -75,6 +83,15 @@
       "web": "",
       "instagram": "",
       "notify_email": "info@salonedemo.it",
+      "piva": "",
+      "payment": {
+        "methods": "Contanti, bancomat o carta in salone",
+        "iban": "",
+        "holder": "",
+        "paypal": "",
+        "satispay": "",
+        "note": ""
+      },
       "hours": {
         "1": [
           540,

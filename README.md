@@ -38,6 +38,10 @@ straight into their phone calendar.
   and the appointment lands in their **iPhone or Android calendar**, with a
   reminder 2 hours before. No app to install, nothing to type by hand. The
   booking still succeeds when email is not configured.
+- **Ricevuta di avvenuta prestazione, in automatico** — quando il barbiere
+  chiude la prestazione, il cliente riceve subito una ricevuta **non fiscale**
+  (importo + come pagare: IBAN, PayPal o in salone) e il salone riceve la
+  notifica del **pagamento in sospeso**, con il totale da incassare nel pannello.
 - **GDPR-friendly** — a ready privacy page, explicit consent checkbox, minimal
   data collected.
 - **Hardened by default** — rate limiting, capped request sizes, HTML escaping,
@@ -85,6 +89,8 @@ All optional; sensible defaults. Secrets are **never** in the source.
 | `BARBERIA_PANEL_SECRET` | HMAC key for panel session cookies |
 | `BARBERIA_ADMIN_TOKEN` | token for the admin `GET /bookings` endpoint |
 | `BARBERIA_SMTP_HOST` / `_PORT` / `_LOGIN` / `_PASSWORD` | optional email sending |
+| `BARBERIA_AUTO_RECEIPT` | `1` closes finished bookings on its own and sends the receipts (default `0`) |
+| `BARBERIA_AUTO_RECEIPT_GRACE_MIN` | minutes after the end of the service before auto-closing (default `15`) |
 | `BARBERIA_OG_DIR` | folder with `og/<slug>.png` social banners |
 | `BARBERIA_SLUG_REDIRECTS` | JSON of `{"old-slug":"new-slug"}` → 301 redirects |
 
@@ -100,6 +106,64 @@ See `.env.example`.
    and put the printed hash into `panel_users.json` under the same slug.
 3. *(optional)* drop `og/<slug>.png` (1200×630) and `og/<slug>-logo.png`.
 4. Restart the service.
+
+## Receipt after the service (ricevuta di avvenuta prestazione)
+
+When the barber closes an appointment (`Completa` / `Chiudi e incassa` in
+`/panel`), the app **automatically** sends:
+
+1. **to the client** — a *non-fiscal* receipt (`Documento non fiscale, non
+   valido ai fini IVA o fiscali`): service, barber, date, **amount** and the
+   payment instructions, i.e. **IBAN** (with account holder), **PayPal** link,
+   Satispay or payment in the salon, plus the booking code as payment reference.
+   The same receipt is attached as a `.txt` file.
+2. **to the salon** (`notify_email`) — a notification saying the payment is
+   **pending** (`da incassare`) with amount, client and service.
+
+Then `Segna incassata` marks the payment as received; the panel header always
+shows how much is still pending. `Reinvia ricevuta` resends it if SMTP was down.
+
+### Payment details per salon
+
+Fill the `payment` block in `salons.json` (or in `defaults` to share it):
+
+```json
+{
+  "slug": "il-mio-salone",
+  "name": "Il Mio Salone",
+  "piva": "P.IVA 01234567890",
+  "notify_email": "info@ilmiosalone.it",
+  "payment": {
+    "methods": "Contanti, bancomat o carta in salone",
+    "iban": "IT00X0000000000000000000000",
+    "holder": "Il Mio Salone di Mario Rossi",
+    "paypal": "https://paypal.me/ilmiosalone",
+    "satispay": "",
+    "note": "Indica il codice prenotazione nella causale."
+  }
+}
+```
+
+Every field is optional: what is empty simply is not shown. `paypal` accepts a
+full URL (`https://paypal.me/...`), a handle (`ilmiosalone`) or an email address.
+Leave the fields empty if you don't want them in the receipt — the amount and
+"da pagare" are always included.
+
+> The receipt is **not** a fiscal document: it is only a confirmation that the
+> service was performed, with an amount to settle. Enable `BARBERIA_AUTO_RECEIPT=1`
+> if you want the app to close finished appointments by itself (default: the
+> barber closes them from the panel).
+
+## Tests
+
+```bash
+python3 -m unittest discover -s tests -v
+```
+
+The suite starts the real HTTP server in-process with a temporary SQLite file and
+a stubbed SMTP, so it covers the whole flow (booking → closing the service →
+receipt to the client + pending-payment notice to the salon) without sending any
+real email.
 
 ## Deploy
 
