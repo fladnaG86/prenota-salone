@@ -10,6 +10,254 @@ const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
 }/*EDITMODE-END*/;
 
 /* ------------------------------------------------------------------ *
+ *  i18n — italiano (default) / inglese con tasto bandiera in alto.
+ *  Le chiavi del dizionario sono le stringhe italiane: se manca una
+ *  traduzione resta visibile l'italiano (fallback sicuro).
+ * ------------------------------------------------------------------ */
+const EN = {
+  "Prenota online": "Book online",
+  "Prenotazione senza account: bastano nome e numero di telefono.": "No account needed: just your name and phone number.",
+  "Caricamento…": "Loading…",
+  "Servizio e ora": "Service & time",
+  "I tuoi dati": "Your details",
+  "Conferma": "Confirm",
+  "Avanzamento della prenotazione": "Booking progress",
+  "Passo {n}: ": "Step {n}: ",
+  "Servizi disponibili": "Available services",
+  "Più richiesto": "Most popular",
+  "Settimana precedente": "Previous week",
+  "Settimana successiva": "Next week",
+  "Torna a oggi": "Back to today",
+  "Giorni della settimana": "Days of the week",
+  "chiuso": "closed",
+  "trascorso": "past",
+  "completo": "full",
+  "{n} posti": "{n} seats",
+  "{n} posti liberi": "{n} seats free",
+  "Fascia oraria": "Time slots",
+  "{a} slot liberi su {b}": "{a} of {b} slots free",
+  "Filtro slot": "Slot filter",
+  "Tutti": "All",
+  "Solo liberi": "Free only",
+  "libero": "free",
+  "ultimo posto": "last seat",
+  "Caricamento disponibilità…": "Loading availability…",
+  "Nessuno slot libero in questa giornata.": "No free slots on this day.",
+  "Prova un altro giorno della settimana: di solito si libera qualcosa il pomeriggio.": "Try another day of the week: a slot usually frees up in the afternoon.",
+  "Orari disponibili {date}": "Available times on {date}",
+  "Ultimo posto": "Last seat",
+  "Completo": "Full",
+  "Trascorso": "Past",
+  "Passo 1 · Servizio": "Step 1 · Service",
+  "Cosa ti serve oggi?": "What do you need today?",
+  "La durata scelta determina l'orario di fine appuntamento nel calendario.": "The chosen duration sets the appointment end time in your calendar.",
+  "Disponibilità": "Availability",
+  "Scegli giorno e ora": "Choose day and time",
+  "Prima disponibilità": "Earliest availability",
+  "{date} · ore {time}": "{date} · at {time}",
+  "Passo 2 · Dati cliente": "Step 2 · Your details",
+  "A nome di chi prenoto?": "Who is the booking for?",
+  "Servizio": "Service",
+  "Data": "Date",
+  "Orario": "Time",
+  "Barbiere": "Barber",
+  "Da pagare in salone": "Pay at the salon",
+  "Dati per la prenotazione": "Booking details",
+  "Nome e cognome": "Full name",
+  "(obbligatorio)": "(required)",
+  "Telefono": "Phone",
+  "Solo per conferma e promemoria 2 ore prima. Nessun account da creare.": "Only for confirmation and a reminder 2 hours before. No account needed.",
+  "Email": "Email",
+  "Ti mandiamo qui l'invito pronto da aggiungere al tuo calendario.": "We'll send you a ready-to-add calendar invite here.",
+  "Es. Andrea Colombo": "e.g. Andrea Colombo",
+  "Es. 335 118 4471": "e.g. 335 118 4471",
+  "Es. nome@esempio.it": "e.g. name@example.com",
+  "Note per il barbiere": "Notes for the barber",
+  "facoltativo": "optional",
+  "Es. Macchinetta 1 ai lati, forbice sopra. Arrivo con mio figlio.": "e.g. Clippers #1 on the sides, scissor on top. Coming with my son.",
+  "{n} caratteri disponibili": "{n} characters left",
+  "Acconsento al trattamento dei dati (nome, telefono, note) per gestire questa prenotazione e inviarmi il promemoria.": "I agree to the processing of my data (name, phone, notes) to manage this booking and send me the reminder.",
+  "Leggi l'informativa sulla privacy": "Read the privacy policy",
+  "Controlla i campi segnalati: manca poco per completare la prenotazione.": "Check the highlighted fields: you're almost done.",
+  "Codice prenotazione: {code}": "Booking code: {code}",
+  "Servizio: {name} ({min} min) — €{price}": "Service: {name} ({min} min) — €{price}",
+  "Barbiere: {barber}": "Barber: {barber}",
+  "Cliente: {name}{phone}": "Client: {name}{phone}",
+  "Note: {note}": "Notes: {note}",
+  "Per annullare: apri il link «Annulla la prenotazione» nell'email di conferma.": "To cancel: open the «Cancel booking» link in the confirmation email.",
+  "Ciao {salon}! Ho prenotato: {service}, {date} alle {time} (codice {code}).": "Hi {salon}! I booked: {service}, {date} at {time} (code {code}).",
+  "Passo 3 · Conferma": "Step 3 · Confirmation",
+  "Appuntamento confermato": "Appointment confirmed",
+  "Ti aspettiamo in {address}. Arriva 5 minuti prima: il tempo di un caffè.": "See you at {address}. Arrive 5 minutes early — time for a coffee.",
+  "Invito inviato a te ({email}) e al barbiere ({barber}). Controlla la tua casella email: apri l'allegato .ics e tocca \"Aggiungi al calendario\".": "Invite sent to you ({email}) and the barber ({barber}). Check your inbox: open the .ics attachment and tap \"Add to calendar\".",
+  "Non siamo riusciti a inviare l'invito via email. Usa i pulsanti qui sotto per aggiungere l'appuntamento al calendario e avvisa il salone al telefono.": "We couldn't send the invite by email. Use the buttons below to add the appointment to your calendar and call the salon.",
+  "Codice {code}": "Code {code}",
+  "{date} · ore {a}–{b}": "{date} · {a}–{b}",
+  "Durata": "Duration",
+  "{n} minuti": "{n} minutes",
+  "Indirizzo": "Address",
+  "Promemoria": "Reminder",
+  "SMS 2 ore prima": "SMS 2 hours before",
+  "Aggiungi al calendario (.ics)": "Add to calendar (.ics)",
+  "Apri in Google Calendar": "Open in Google Calendar",
+  "Invia la conferma su WhatsApp": "Send the confirmation on WhatsApp",
+  "File pronto: {name}": "File ready: {name}",
+  "Il file .ics si apre direttamente nell’app Calendario su iPhone e in Google Calendar su Android. Se il download è bloccato dal browser, usa il pulsante Google Calendar: è già compilato con data, ora, durata e indirizzo del salone.": "The .ics file opens directly in the Calendar app on iPhone and in Google Calendar on Android. If your browser blocks the download, use the Google Calendar button: it's already filled with date, time, duration and the salon address.",
+  "Informazioni sul salone": "Salon information",
+  "Il salone": "The salon",
+  "Apri in Google Maps": "Open in Google Maps",
+  "Consigliata la prenotazione online: in negozio restano pochi posti.": "Online booking recommended: only a few walk-in slots left.",
+  "Orari": "Opening hours",
+  "oggi": "today",
+  "Buono a sapersi": "Good to know",
+  "Disponibilità in tempo reale: prenota e ricevi l'invito via email sul tuo calendario.": "Real-time availability: book and get the calendar invite by email.",
+  "Scegli la postazione": "Choose a station",
+  "Postazioni del salone:": "Salon stations:",
+  "Passo {n} di 3: {step}": "Step {n} of 3: {step}",
+  "servizio e orario": "service and time",
+  "dati cliente": "your details",
+  "conferma": "confirmation",
+  "Riepilogo": "Summary",
+  "Continua": "Continue",
+  "Indietro": "Back",
+  "Invio in corso…": "Sending…",
+  "Conferma prenotazione": "Confirm booking",
+  "Nessun pagamento online: {amount} da saldare in salone.": "No online payment: {amount} to pay at the salon.",
+  "Prenota un altro appuntamento": "Book another appointment",
+  "Chiama il salone": "Call the salon",
+  "{name} · scegli un orario": "{name} · pick a time",
+  "Scegli servizio e orario": "Choose service and time",
+  "Inserisci nome e cognome (almeno 2 caratteri).": "Enter your full name (at least 2 characters).",
+  "Aggiungi anche il cognome, così ti riconosciamo alla cassa.": "Please add your last name so we recognise you at the desk.",
+  "Inserisci il numero di telefono.": "Enter your phone number.",
+  "Numero non valido: usa almeno 9 cifre, es. 335 118 4471.": "Invalid number: use at least 9 digits, e.g. 335 118 4471.",
+  "Inserisci l'email: ti arrivano il promemoria e l'invito al calendario.": "Enter your email: you'll get the reminder and the calendar invite.",
+  "Email non valida. Controlla l'indirizzo, es. nome@esempio.it": "Invalid email. Check the address, e.g. name@example.com",
+  "Serve il consenso per gestire la prenotazione.": "Consent is required to manage the booking.",
+  "L'orario delle {time} è appena stato prenotato da qualcun altro. Scegline uno ancora libero qui sotto.": "The {time} slot was just booked by someone else. Pick one that's still free below.",
+  "Non è stato possibile completare la prenotazione.": "The booking couldn't be completed.",
+  "Server non raggiungibile. Riprova tra qualche secondo.": "Server unreachable. Please try again in a moment.",
+  "Aperto ora · chiude alle {time}": "Open now · closes at {time}",
+  "Chiuso · apre oggi alle {time}": "Closed · opens today at {time}",
+  "Chiuso · apre {when} alle {time}": "Closed · opens {when} at {time}",
+  "Chiuso": "Closed",
+  "domani": "tomorrow",
+  "Barbiere uomo · dal 2014": "Men's barber · since 2014",
+  "Tre poltrone, forbici e rasoio a mano libera. Caffè offerto, musica bassa e nessuna fretta.": "Three chairs, scissors and a straight razor. Free coffee, quiet music and no rush.",
+  "Prenota online su {name}: scegli servizio, barbiere e orario. Nessun account necessario.": "Book online at {name}: choose service, barber and time. No account needed.",
+  "Disdetta: apri il link «Annulla la prenotazione» nell'email di conferma.": "Cancellation: open the «Cancel booking» link in the confirmation email.",
+  "Paghi in salone: contanti, bancomat o carta di credito.": "Pay at the salon: cash, debit or credit card.",
+  "Paghi in salone: contanti, bancomat o carta.": "Pay at the salon: cash, debit or credit card.",
+  "Nessun anticipo e nessun account da creare per prenotare.": "No deposit and no account to create to book.",
+  "Nessun account da creare per prenotare.": "No account to create to book.",
+  "Macchinetta, forbice e finitura a rasoio.": "Clippers, scissors and a razor finish.",
+  "Il pacchetto completo, il più richiesto.": "The complete package, our most requested.",
+  "Contorni a rasoio, panno caldo e olio.": "Razor edges, hot towel and oil.",
+  "Rasoio a mano libera, due passate.": "Straight razor, two passes.",
+  "Fino a 12 anni, con mamma o papà.": "Up to 12 years old, with mum or dad.",
+  "Shampoo, massaggio e lozione finale.": "Shampoo, massage and finishing lotion.",
+  "Taglio e rifinitura su misura.": "Tailored cut and finish.",
+  "Il pacchetto completo.": "The complete package.",
+  "Contorni curati a rasoio e panno caldo.": "Razor-clean edges and hot towel.",
+  "Rasatura tradizionale a mano libera.": "Traditional straight-razor shave.",
+  "Taglio per i più piccoli.": "A cut for the little ones.",
+};
+
+const WD_SHORT = {
+  it: ["DOM", "LUN", "MAR", "MER", "GIO", "VEN", "SAB"],
+  en: ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"],
+};
+const WD_LONG = {
+  it: ["domenica", "lunedì", "martedì", "mercoledì", "giovedì", "venerdì", "sabato"],
+  en: ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"],
+};
+const MONTHS = {
+  it: ["gennaio", "febbraio", "marzo", "aprile", "maggio", "giugno", "luglio",
+       "agosto", "settembre", "ottobre", "novembre", "dicembre"],
+  en: ["January", "February", "March", "April", "May", "June", "July",
+       "August", "September", "October", "November", "December"],
+};
+
+const LANG_KEY = "barberia_lang";
+
+function detectLang() {
+  try {
+    const stored = localStorage.getItem(LANG_KEY);
+    if (stored === "it" || stored === "en") return stored;
+  } catch (e) { /* localStorage non disponibile */ }
+  try {
+    return String(navigator.language || "").toLowerCase().startsWith("it") ? "it" : "en";
+  } catch (e) {
+    return "it";
+  }
+}
+
+// lingua corrente a livello di modulo: le funzioni di formattazione (date,
+// stato di apertura) leggono LANG al momento del render.
+let LANG = detectLang();
+
+function makeT(lang) {
+  return function t(s, params) {
+    let out = (lang === "en" && Object.prototype.hasOwnProperty.call(EN, s)) ? EN[s] : s;
+    if (params) {
+      Object.keys(params).forEach((k) => {
+        out = out.split("{" + k + "}").join(String(params[k]));
+      });
+    }
+    return out;
+  };
+}
+
+function saveLang(lang) {
+  LANG = lang;
+  try { localStorage.setItem(LANG_KEY, lang); } catch (e) { /* ignora */ }
+  try { document.documentElement.lang = lang; } catch (e) { /* ignora */ }
+}
+
+// nomi dei servizi del catalogo integrato (in inglese solo per questi,
+// così un nome personalizzato dal salone resta quello del salone)
+const SERVICE_IT_NAMES = {
+  taglio: "Taglio classico",
+  "taglio-barba": "Taglio + barba",
+  barba: "Barba modellata",
+  rasatura: "Rasatura tradizionale",
+  bambino: "Taglio bambino",
+  rituale: "Rituale capelli e cute",
+};
+const SERVICE_EN_NAMES = {
+  taglio: "Classic cut",
+  "taglio-barba": "Cut + beard",
+  barba: "Beard shaping",
+  rasatura: "Traditional shave",
+  bambino: "Kids' cut",
+  rituale: "Hair & scalp ritual",
+};
+
+function serviceName(s) {
+  if (!s) return "";
+  if (LANG === "en" && SERVICE_EN_NAMES[s.id] &&
+      SERVICE_IT_NAMES[s.id] === s.name) {
+    return SERVICE_EN_NAMES[s.id];
+  }
+  return s.name;
+}
+
+const LangCtx = React.createContext({ lang: "it", t: (s) => s, toggle: () => {} });
+function useT() { return React.useContext(LangCtx); }
+
+// etichetta dello stato di apertura, ricalcolata a ogni cambio lingua
+function statusLabel(s) {
+  const t = makeT(LANG);
+  if (s.kind === "now") return t("Aperto ora · chiude alle {time}", { time: s.time });
+  if (s.kind === "today") return t("Chiuso · apre oggi alle {time}", { time: s.time });
+  if (s.kind === "later") {
+    const when = s.days === 1 ? t("domani") : WD_LONG[LANG][s.dow];
+    return t("Chiuso · apre {when} alle {time}", { when, time: s.time });
+  }
+  return t("Chiuso");
+}
+
+/* ------------------------------------------------------------------ *
  *  Dati del salone (mock, nessun backend)
  * ------------------------------------------------------------------ */
 let SALON = {
@@ -116,9 +364,6 @@ function applySalon(cfg) {
   }));
 }
 
-const WD_SHORT = ["DOM", "LUN", "MAR", "MER", "GIO", "VEN", "SAB"];
-const WD_LONG = ["domenica", "lunedì", "martedì", "mercoledì", "giovedì", "venerdì", "sabato"];
-const MONTHS = ["gennaio", "febbraio", "marzo", "aprile", "maggio", "giugno", "luglio", "agosto", "settembre", "ottobre", "novembre", "dicembre"];
 
 /* ------------------------------------------------------------------ *
  *  Utility date / disponibilità
@@ -215,12 +460,12 @@ function weekDays(offset) {
 function longDate(dateISO) {
   if (!dateISO) return "";
   const d = parseISO(dateISO);
-  return `${WD_LONG[d.getDay()]} ${d.getDate()} ${MONTHS[d.getMonth()]}`;
+  return `${WD_LONG[LANG][d.getDay()]} ${d.getDate()} ${MONTHS[LANG][d.getMonth()]}`;
 }
 function shortDate(dateISO) {
   if (!dateISO) return "";
   const d = parseISO(dateISO);
-  return `${WD_SHORT[d.getDay()]} ${d.getDate()} ${MONTHS[d.getMonth()].slice(0, 3)}`;
+  return `${WD_SHORT[LANG][d.getDay()]} ${d.getDate()} ${MONTHS[LANG][d.getMonth()].slice(0, 3)}`;
 }
 
 function weekLabel(offset) {
@@ -228,9 +473,9 @@ function weekLabel(offset) {
   const a = days[0];
   const b = days[5];
   if (a.getMonth() === b.getMonth()) {
-    return `${a.getDate()} – ${b.getDate()} ${MONTHS[b.getMonth()]} ${b.getFullYear()}`;
+    return `${a.getDate()} – ${b.getDate()} ${MONTHS[LANG][b.getMonth()]} ${b.getFullYear()}`;
   }
-  return `${a.getDate()} ${MONTHS[a.getMonth()]} – ${b.getDate()} ${MONTHS[b.getMonth()]} ${b.getFullYear()}`;
+  return `${a.getDate()} ${MONTHS[LANG][a.getMonth()]} – ${b.getDate()} ${MONTHS[LANG][b.getMonth()]} ${b.getFullYear()}`;
 }
 
 /** Prima data utile a partire dai dati reali ricevuti; null se non ancora determinabile. */
@@ -253,19 +498,20 @@ function openStatus() {
   const mins = now.getHours() * 60 + now.getMinutes();
   const today = HOURS[dow];
   if (today && mins >= today.open && mins < today.close) {
-    return { open: true, label: `Aperto ora · chiude alle ${hhmm(today.close)}` };
+    return { open: true, kind: "now", time: hhmm(today.close) };
   }
   for (let i = 0; i < 8; i++) {
     const d = addDays(now, i);
     const h = HOURS[d.getDay()];
     if (!h) continue;
-    if (i === 0 && mins < h.open) return { open: false, label: `Chiuso · apre oggi alle ${hhmm(h.open)}` };
+    if (i === 0 && mins < h.open) {
+      return { open: false, kind: "today", time: hhmm(h.open) };
+    }
     if (i > 0) {
-      const when = i === 1 ? "domani" : WD_LONG[d.getDay()];
-      return { open: false, label: `Chiuso · apre ${when} alle ${hhmm(h.open)}` };
+      return { open: false, kind: "later", dow: d.getDay(), days: i, time: hhmm(h.open) };
     }
   }
-  return { open: false, label: "Chiuso" };
+  return { open: false, kind: "closed" };
 }
 
 /* ------------------------------------------------------------------ *
@@ -456,6 +702,31 @@ function PoleMark() {
   return <span className="pole" aria-hidden="true" />;
 }
 
+/* Bandiera disegnata in SVG: le emoji bandiera non si vedono su Windows. */
+function FlagIcon({ code }) {
+  if (code === "it") {
+    return (
+      <svg className="flag" viewBox="0 0 3 2" width="22" height="15" aria-hidden="true" focusable="false">
+        <rect width="1" height="2" fill="#009246" />
+        <rect x="1" width="1" height="2" fill="#ffffff" />
+        <rect x="2" width="1" height="2" fill="#ce2b37" />
+      </svg>
+    );
+  }
+  return (
+    <svg className="flag" viewBox="0 0 60 30" width="22" height="15" aria-hidden="true" focusable="false">
+      <clipPath id="gb-clip">
+        <path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z" />
+      </clipPath>
+      <rect width="60" height="30" fill="#012169" />
+      <path d="M0,0 L60,30 M60,0 L0,30" stroke="#ffffff" strokeWidth="6" />
+      <path d="M0,0 L60,30 M60,0 L0,30" clipPath="url(#gb-clip)" stroke="#c8102e" strokeWidth="4" />
+      <path d="M30,0 v30 M0,15 h60" stroke="#ffffff" strokeWidth="10" />
+      <path d="M30,0 v30 M0,15 h60" stroke="#c8102e" strokeWidth="6" />
+    </svg>
+  );
+}
+
 /* ------------------------------------------------------------------ *
  *  Stili
  * ------------------------------------------------------------------ */
@@ -511,6 +782,11 @@ button{font-family:inherit}
   padding:7px 11px;border-radius:999px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.16);color:var(--cream)}
 .open-chip .dot{width:7px;height:7px;border-radius:50%;background:color-mix(in oklab,var(--accent) 80%,white)}
 .open-chip.is-closed .dot{background:oklch(0.72 0.02 60)}
+.lang-btn{margin-left:8px;flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;font:inherit;font-size:.72rem;font-weight:700;
+  letter-spacing:.06em;padding:7px 11px;border-radius:999px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.22);
+  color:var(--cream);cursor:pointer;transition:background .16s,border-color .16s}
+.lang-btn:hover{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.34)}
+.lang-btn .flag{display:block;border-radius:2px;box-shadow:0 0 0 1px rgba(255,255,255,.35)}
 .brand-sub{margin:14px 0 0;font-size:.86rem;line-height:1.5;color:color-mix(in oklab,var(--cream) 74%,transparent)}
 .brand-sub a{color:var(--cream);text-decoration:underline;text-underline-offset:2px}
 .brand-note{margin:10px 0 0;font-size:.76rem;color:color-mix(in oklab,var(--cream) 58%,transparent)}
@@ -723,9 +999,10 @@ textarea.input{min-height:96px;resize:vertical;line-height:1.5}
  *  Sotto-componenti
  * ------------------------------------------------------------------ */
 function Stepper({ step, onGo }) {
-  const labels = ["Servizio e ora", "I tuoi dati", "Conferma"];
+  const { t } = useT();
+  const labels = [t("Servizio e ora"), t("I tuoi dati"), t("Conferma")];
   return (
-    <nav className="stepper" aria-label="Avanzamento della prenotazione">
+    <nav className="stepper" aria-label={t("Avanzamento della prenotazione")}>
       {labels.map((label, i) => (
         <button
           key={label}
@@ -737,7 +1014,7 @@ function Stepper({ step, onGo }) {
         >
           <span className="step-bar" />
           <span className="step-label">
-            <span className="sr-only">Passo {i + 1}: </span>
+            <span className="sr-only">{t("Passo {n}: ", { n: i + 1 })}</span>
             {label}
           </span>
         </button>
@@ -747,8 +1024,9 @@ function Stepper({ step, onGo }) {
 }
 
 function ServiceStrip({ services, value, onChange }) {
+  const { t } = useT();
   return (
-    <div className="strip" role="group" aria-label="Servizi disponibili">
+    <div className="strip" role="group" aria-label={t("Servizi disponibili")}>
       {services.map((s) => {
         const active = s.id === value;
         return (
@@ -761,20 +1039,20 @@ function ServiceStrip({ services, value, onChange }) {
           >
             <span className="svc-row">
               <Icon name={s.icon} size={22} />
-              {s.popular ? <span className="badge">Più richiesto</span> : null}
+              {s.popular ? <span className="badge">{t("Più richiesto")}</span> : null}
               <span className="svc-check">
                 <Icon name="check" size={18} stroke={2.2} />
               </span>
             </span>
             <span>
-              <span className="svc-name">{s.name}</span>
+              <span className="svc-name">{serviceName(s)}</span>
               <span className="svc-meta" style={{ marginTop: 4 }}>
                 <b>{s.min} min</b>
                 <span aria-hidden="true">·</span>
                 <b>€{s.price}</b>
               </span>
             </span>
-            <span className="svc-note">{s.note}</span>
+            <span className="svc-note">{t(s.note)}</span>
           </button>
         );
       })}
@@ -783,6 +1061,7 @@ function ServiceStrip({ services, value, onChange }) {
 }
 
 function WeekStrip({ offset, selected, onSelect, onOffset, onToday, canGoBack, avail }) {
+  const { t } = useT();
   const days = useMemo(() => weekDays(offset), [offset]);
   const todayISO = isoDate(new Date());
   return (
@@ -793,7 +1072,7 @@ function WeekStrip({ offset, selected, onSelect, onOffset, onToday, canGoBack, a
           className="icon-btn"
           onClick={() => onOffset(-1)}
           disabled={!canGoBack}
-          aria-label="Settimana precedente"
+          aria-label={t("Settimana precedente")}
         >
           <Icon name="chevronLeft" size={19} stroke={2} />
         </button>
@@ -801,27 +1080,27 @@ function WeekStrip({ offset, selected, onSelect, onOffset, onToday, canGoBack, a
         <div className="week-actions">
           {offset !== 0 ? (
             <button type="button" className="link-btn" onClick={onToday}>
-              Torna a oggi
+              {t("Torna a oggi")}
             </button>
           ) : null}
           <button
             type="button"
             className="icon-btn"
             onClick={() => onOffset(1)}
-            aria-label="Settimana successiva"
+            aria-label={t("Settimana successiva")}
           >
             <Icon name="chevronRight" size={19} stroke={2} />
           </button>
         </div>
       </div>
-      <div className="days" role="group" aria-label="Giorni della settimana">
+      <div className="days" role="group" aria-label={t("Giorni della settimana")}>
         {days.map((d) => {
           const iso = isoDate(d);
           const s = daySummary(iso, avail);
           const disabled = s.loaded && (s.closed || s.allPast || s.free === 0);
           const active = iso === selected;
           const isToday = iso === todayISO;
-          const sub = !s.loaded ? "…" : s.closed ? "chiuso" : s.allPast ? "trascorso" : s.free === 0 ? "completo" : `${s.free} posti`;
+          const sub = !s.loaded ? "…" : s.closed ? t("chiuso") : s.allPast ? t("trascorso") : s.free === 0 ? t("completo") : t("{n} posti", { n: s.free });
           return (
             <button
               key={iso}
@@ -831,13 +1110,13 @@ function WeekStrip({ offset, selected, onSelect, onOffset, onToday, canGoBack, a
               disabled={disabled}
               onClick={() => onSelect(iso)}
             >
-              <span className="day-abbr">{WD_SHORT[d.getDay()]}</span>
+              <span className="day-abbr">{WD_SHORT[LANG][d.getDay()]}</span>
               <span className="day-num">{d.getDate()}</span>
               <span className="day-free">{sub}</span>
               {isToday ? <span className="day-today" aria-hidden="true" /> : null}
               <span className="sr-only">
                 {longDate(iso)}
-                {disabled ? `, ${sub}` : `, ${s.free} posti liberi`}
+                {disabled ? `, ${sub}` : `, ${t("{n} posti liberi", { n: s.free })}`}
               </span>
             </button>
           );
@@ -848,6 +1127,7 @@ function WeekStrip({ offset, selected, onSelect, onOffset, onToday, canGoBack, a
 }
 
 function SlotGrid({ dateISO, value, onSelect, onlyFree, onToggleFree, avail, service }) {
+  const { t } = useT();
   const loaded = isAvailLoaded(dateISO, avail);
   const slots = useMemo(() => slotsFor(dateISO, avail), [dateISO, avail]);
   const closing = dateISO ? closingFor(dateISO) : null;
@@ -863,54 +1143,54 @@ function SlotGrid({ dateISO, value, onSelect, onlyFree, onToggleFree, avail, ser
     <div className="section">
       <div className="sec-head">
         <div>
-          <p className="eyebrow">Fascia oraria</p>
+          <p className="eyebrow">{t("Fascia oraria")}</p>
           <h3 className="h2" style={{ fontSize: "1.02rem", textTransform: "capitalize" }}>
             {longDate(dateISO)}
           </h3>
         </div>
         <p className="sec-hint">
-          {loaded ? `${freeCount} slot liberi su ${decorated.length}` : "…"}
+          {loaded ? t("{a} slot liberi su {b}", { a: freeCount, b: decorated.length }) : "…"}
         </p>
       </div>
 
       <div className="slot-tools">
-        <div className="seg" role="group" aria-label="Filtro slot">
+        <div className="seg" role="group" aria-label={t("Filtro slot")}>
           <button type="button" aria-pressed={!onlyFree} onClick={() => onToggleFree(false)}>
-            Tutti
+            {t("Tutti")}
           </button>
           <button type="button" aria-pressed={onlyFree} onClick={() => onToggleFree(true)}>
-            Solo liberi
+            {t("Solo liberi")}
           </button>
         </div>
         <div className="legend">
           <span>
-            <i className="swatch" aria-hidden="true" /> libero
+            <i className="swatch" aria-hidden="true" /> {t("libero")}
           </span>
           <span>
-            <i className="swatch last" aria-hidden="true" /> ultimo posto
+            <i className="swatch last" aria-hidden="true" /> {t("ultimo posto")}
           </span>
           <span>
-            <i className="swatch busy" aria-hidden="true" /> completo
+            <i className="swatch busy" aria-hidden="true" /> {t("completo")}
           </span>
         </div>
       </div>
 
       {!loaded ? (
         <div className="empty" aria-busy="true">
-          <strong>Caricamento disponibilità…</strong>
+          <strong>{t("Caricamento disponibilità…")}</strong>
         </div>
       ) : visible.length === 0 ? (
         <div className="empty">
-          <strong>Nessuno slot libero in questa giornata.</strong>
-          <p>Prova un altro giorno della settimana: di solito si libera qualcosa il pomeriggio.</p>
+          <strong>{t("Nessuno slot libero in questa giornata.")}</strong>
+          <p>{t("Prova un altro giorno della settimana: di solito si libera qualcosa il pomeriggio.")}</p>
         </div>
       ) : (
-        <div className="slot-grid" role="group" aria-label={`Orari disponibili ${longDate(dateISO)}`}>
+        <div className="slot-grid" role="group" aria-label={t("Orari disponibili {date}", { date: longDate(dateISO) })}>
           {visible.map((s) => {
             const active = value === s.minutes;
             const isBusy = s.status === "busy";
             const isPast = s.status === "past";
-            const seats = s.status === "last" ? "Ultimo posto" : `${s.free} posti`;
+            const seats = s.status === "last" ? t("Ultimo posto") : t("{n} posti", { n: s.free });
             return (
               <button
                 key={s.minutes}
@@ -921,7 +1201,7 @@ function SlotGrid({ dateISO, value, onSelect, onlyFree, onToggleFree, avail, ser
                 onClick={() => onSelect(s.minutes)}
               >
                 <span className="slot-time">{hhmm(s.minutes)}</span>
-                <span className="slot-seats">{isBusy ? "Completo" : isPast ? "Trascorso" : seats}</span>
+                <span className="slot-seats">{isBusy ? t("Completo") : isPast ? t("Trascorso") : seats}</span>
               </button>
             );
           })}
@@ -935,29 +1215,30 @@ function BookingStep({
   services, service, serviceId, setServiceId, weekOffset, setWeekOffset, dateISO, setDateISO,
   time, setTime, onlyFree, setOnlyFree, nextFree, onNextFree, headingRef, avail,
 }) {
+  const { t } = useT();
   return (
     <>
       <section className="panel" aria-labelledby="step1-h">
         <div className="sec-head">
           <div>
-            <p className="eyebrow">Passo 1 · Servizio</p>
+            <p className="eyebrow">{t("Passo 1 · Servizio")}</p>
             <h2 className="h2" id="step1-h" tabIndex={-1} ref={headingRef}>
-              Cosa ti serve oggi?
+              {t("Cosa ti serve oggi?")}
             </h2>
           </div>
         </div>
         <ServiceStrip services={services} value={serviceId} onChange={(id) => { setServiceId(id); setTime(null); }} />
         <p className="sec-hint" style={{ marginTop: 12 }}>
-          La durata scelta determina l'orario di fine appuntamento nel calendario.
+          {t("La durata scelta determina l'orario di fine appuntamento nel calendario.")}
         </p>
       </section>
 
       <section className="panel section" aria-labelledby="step1-week">
         <div className="sec-head">
           <div>
-            <p className="eyebrow">Disponibilità</p>
+            <p className="eyebrow">{t("Disponibilità")}</p>
             <h2 className="h2" id="step1-week" style={{ fontSize: "1.05rem" }}>
-              Scegli giorno e ora
+              {t("Scegli giorno e ora")}
             </h2>
           </div>
         </div>
@@ -995,9 +1276,9 @@ function BookingStep({
           <button type="button" className="next-free" onClick={onNextFree}>
             <Icon name="clock" size={20} />
             <span style={{ minWidth: 0 }}>
-              <span className="nf-label">Prima disponibilità</span>
+              <span className="nf-label">{t("Prima disponibilità")}</span>
               <span className="nf-value">
-                {shortDate(nextFree.date)} · ore {hhmm(nextFree.minutes)}
+                {t("{date} · ore {time}", { date: shortDate(nextFree.date), time: hhmm(nextFree.minutes) })}
               </span>
             </span>
             <span style={{ marginLeft: "auto", color: "var(--accent)" }}>
@@ -1021,15 +1302,16 @@ function BookingStep({
 }
 
 function DetailsStep({ service, dateISO, time, barber, form, setForm, errors, onBlurField, onSubmit, sending, headingRef }) {
+  const { t } = useT();
   const end = time + service.min;
   return (
     <>
       <section className="panel" aria-labelledby="step2-h">
         <div className="sec-head">
           <div>
-            <p className="eyebrow">Passo 2 · Dati cliente</p>
+            <p className="eyebrow">{t("Passo 2 · Dati cliente")}</p>
             <h2 className="h2" id="step2-h" tabIndex={-1} ref={headingRef}>
-              A nome di chi prenoto?
+              {t("A nome di chi prenoto?")}
             </h2>
           </div>
         </div>
@@ -1037,27 +1319,27 @@ function DetailsStep({ service, dateISO, time, barber, form, setForm, errors, on
         <div className="recap">
           <dl>
             <div className="recap-row">
-              <dt>Servizio</dt>
+              <dt>{t("Servizio")}</dt>
               <dd>
-                {service.name} · {service.min} min
+                {serviceName(service)} · {service.min} min
               </dd>
             </div>
             <div className="recap-row">
-              <dt>Data</dt>
+              <dt>{t("Data")}</dt>
               <dd style={{ textTransform: "capitalize" }}>{longDate(dateISO)}</dd>
             </div>
             <div className="recap-row">
-              <dt>Orario</dt>
+              <dt>{t("Orario")}</dt>
               <dd>
                 {hhmm(time)} – {hhmm(end)}
               </dd>
             </div>
             <div className="recap-row">
-              <dt>Barbiere</dt>
+              <dt>{t("Barbiere")}</dt>
               <dd>{barber}</dd>
             </div>
             <div className="recap-row">
-              <dt>Da pagare in salone</dt>
+              <dt>{t("Da pagare in salone")}</dt>
               <dd>€{service.price}</dd>
             </div>
           </dl>
@@ -1065,19 +1347,19 @@ function DetailsStep({ service, dateISO, time, barber, form, setForm, errors, on
 
         <form className="form" onSubmit={(e) => { e.preventDefault(); if (onSubmit && !sending) onSubmit(); }} noValidate>
           <fieldset style={{ border: 0, margin: 0, padding: 0, display: "grid", gap: 18 }}>
-            <legend className="sr-only">Dati per la prenotazione</legend>
+            <legend className="sr-only">{t("Dati per la prenotazione")}</legend>
 
             <div className="field">
               <label className="label" htmlFor="c-name">
-                Nome e cognome <span className="req" aria-hidden="true">*</span>
-                <span className="sr-only">(obbligatorio)</span>
+                {t("Nome e cognome")} <span className="req" aria-hidden="true">*</span>
+                <span className="sr-only">{t("(obbligatorio)")}</span>
               </label>
               <input
                 id="c-name"
                 className="input"
                 type="text"
                 autoComplete="name"
-                placeholder="Es. Andrea Colombo"
+                placeholder={t("Es. Andrea Colombo")}
                 value={form.name}
                 aria-invalid={errors.name ? "true" : "false"}
                 aria-describedby={errors.name ? "err-name" : undefined}
@@ -1093,8 +1375,8 @@ function DetailsStep({ service, dateISO, time, barber, form, setForm, errors, on
 
             <div className="field">
               <label className="label" htmlFor="c-phone">
-                Telefono <span className="req" aria-hidden="true">*</span>
-                <span className="sr-only">(obbligatorio)</span>
+                {t("Telefono")} <span className="req" aria-hidden="true">*</span>
+                <span className="sr-only">{t("(obbligatorio)")}</span>
               </label>
               <input
                 id="c-phone"
@@ -1102,7 +1384,7 @@ function DetailsStep({ service, dateISO, time, barber, form, setForm, errors, on
                 type="tel"
                 inputMode="tel"
                 autoComplete="tel"
-                placeholder="Es. 335 118 4471"
+                placeholder={t("Es. 335 118 4471")}
                 value={form.phone}
                 aria-invalid={errors.phone ? "true" : "false"}
                 aria-describedby={errors.phone ? "err-phone" : "hint-phone"}
@@ -1115,15 +1397,15 @@ function DetailsStep({ service, dateISO, time, barber, form, setForm, errors, on
                 </p>
               ) : (
                 <p className="field-hint" id="hint-phone">
-                  Solo per conferma e promemoria 2 ore prima. Nessun account da creare.
+                  {t("Solo per conferma e promemoria 2 ore prima. Nessun account da creare.")}
                 </p>
               )}
             </div>
 
             <div className="field">
               <label className="label" htmlFor="c-email">
-                Email <span className="req" aria-hidden="true">*</span>
-                <span className="sr-only">(obbligatorio)</span>
+                {t("Email")} <span className="req" aria-hidden="true">*</span>
+                <span className="sr-only">{t("(obbligatorio)")}</span>
               </label>
               <input
                 id="c-email"
@@ -1131,7 +1413,7 @@ function DetailsStep({ service, dateISO, time, barber, form, setForm, errors, on
                 type="email"
                 inputMode="email"
                 autoComplete="email"
-                placeholder="Es. nome@esempio.it"
+                placeholder={t("Es. nome@esempio.it")}
                 value={form.email}
                 aria-invalid={errors.email ? "true" : "false"}
                 aria-describedby={errors.email ? "err-email" : "hint-email"}
@@ -1144,25 +1426,25 @@ function DetailsStep({ service, dateISO, time, barber, form, setForm, errors, on
                 </p>
               ) : (
                 <p className="field-hint" id="hint-email">
-                  Ti mandiamo qui l'invito pronto da aggiungere al tuo calendario.
+                  {t("Ti mandiamo qui l'invito pronto da aggiungere al tuo calendario.")}
                 </p>
               )}
             </div>
 
             <div className="field">
               <label className="label" htmlFor="c-note">
-                Note per il barbiere <span style={{ color: "var(--muted)", fontWeight: 500 }}>(facoltativo)</span>
+                {t("Note per il barbiere")} <span style={{ color: "var(--muted)", fontWeight: 500 }}>({t("facoltativo")})</span>
               </label>
               <textarea
                 id="c-note"
                 className="input"
                 rows={3}
                 maxLength={240}
-                placeholder="Es. Macchinetta 1 ai lati, forbice sopra. Arrivo con mio figlio."
+                placeholder={t("Es. Macchinetta 1 ai lati, forbice sopra. Arrivo con mio figlio.")}
                 value={form.note}
                 onChange={(e) => setForm({ ...form, note: e.target.value })}
               />
-              <p className="field-hint">{240 - form.note.length} caratteri disponibili</p>
+              <p className="field-hint">{t("{n} caratteri disponibili", { n: 240 - form.note.length })}</p>
             </div>
 
             <label className="check" htmlFor="c-consent">
@@ -1174,9 +1456,8 @@ function DetailsStep({ service, dateISO, time, barber, form, setForm, errors, on
                 onChange={(e) => setForm({ ...form, consent: e.target.checked })}
               />
               <span>
-                Acconsento al trattamento dei dati (nome, telefono, note) per gestire questa
-                prenotazione e inviarmi il promemoria.
-                <a href="/privacy" target="_blank" rel="noreferrer">Leggi l'informativa sulla privacy</a>
+                {t("Acconsento al trattamento dei dati (nome, telefono, note) per gestire questa prenotazione e inviarmi il promemoria.")}{" "}
+                <a href="/privacy" target="_blank" rel="noreferrer">{t("Leggi l'informativa sulla privacy")}</a>
               </span>
             </label>
           </fieldset>
@@ -1185,7 +1466,7 @@ function DetailsStep({ service, dateISO, time, barber, form, setForm, errors, on
         {Object.keys(errors).length > 0 ? (
           <div className="alert" role="alert">
             <Icon name="user" size={18} />
-            <span>Controlla i campi segnalati: manca poco per completare la prenotazione.</span>
+            <span>{t("Controlla i campi segnalati: manca poco per completare la prenotazione.")}</span>
           </div>
         ) : null}
       </section>
@@ -1194,17 +1475,18 @@ function DetailsStep({ service, dateISO, time, barber, form, setForm, errors, on
 }
 
 function DoneStep({ service, dateISO, time, barber, code, form, uid, headingRef, sendState }) {
+  const { t } = useT();
   const [downloaded, setDownloaded] = useState(null);
   const start = slotMoment(dateISO, time);
   const end = new Date(start.getTime() + service.min * 60000);
-  const title = `${service.name} — ${SALON.name}`;
+  const title = `${serviceName(service)} — ${SALON.name}`;
   const description = [
-    `Codice prenotazione: ${code}`,
-    `Servizio: ${service.name} (${service.min} min) — €${service.price}`,
-    `Barbiere: ${barber}`,
-    `Cliente: ${form.name}${form.phone ? ` · ${form.phone}` : ""}`,
-    form.note ? `Note: ${form.note}` : "",
-    "Per annullare: apri il link «Annulla la prenotazione» nell'email di conferma.",
+    t("Codice prenotazione: {code}", { code }),
+    t("Servizio: {name} ({min} min) — €{price}", { name: serviceName(service), min: service.min, price: service.price }),
+    t("Barbiere: {barber}", { barber }),
+    t("Cliente: {name}{phone}", { name: form.name, phone: form.phone ? ` · ${form.phone}` : "" }),
+    form.note ? t("Note: {note}", { note: form.note }) : "",
+    t("Per annullare: apri il link «Annulla la prenotazione» nell'email di conferma."),
   ]
     .filter(Boolean)
     .join("\n");
@@ -1218,7 +1500,8 @@ function DoneStep({ service, dateISO, time, barber, code, form, uid, headingRef,
   };
 
   const waText = encodeURIComponent(
-    `Ciao ${SALON.name}! Ho prenotato: ${service.name}, ${longDate(dateISO)} alle ${hhmm(time)} (codice ${code}).`
+    t("Ciao {salon}! Ho prenotato: {service}, {date} alle {time} (codice {code}).",
+      { salon: SALON.name, service: serviceName(service), date: longDate(dateISO), time: hhmm(time), code })
   );
 
   return (
@@ -1228,13 +1511,13 @@ function DoneStep({ service, dateISO, time, barber, code, form, uid, headingRef,
           <Icon name="check" size={26} stroke={2.4} />
         </span>
         <p className="eyebrow" style={{ marginTop: 16 }}>
-          Passo 3 · Conferma
+          {t("Passo 3 · Conferma")}
         </p>
         <h2 className="h2" id="step3-h" tabIndex={-1} ref={headingRef} style={{ fontSize: "1.5rem" }}>
-          Appuntamento confermato
+          {t("Appuntamento confermato")}
         </h2>
         <p className="sec-hint" style={{ marginTop: 8 }}>
-                  Ti aspettiamo in {SALON.address}. Arriva 5 minuti prima: il tempo di un caffè.
+                  {t("Ti aspettiamo in {address}. Arriva 5 minuti prima: il tempo di un caffè.", { address: SALON.address })}
                 </p>
 
                 {sendState === "sent" ? (
@@ -1247,9 +1530,8 @@ function DoneStep({ service, dateISO, time, barber, code, form, uid, headingRef,
                       color: "var(--success)", fontSize: ".84rem", fontWeight: 600, lineHeight: 1.5,
                     }}
                   >
-                    <Icon name="check" size={17} stroke={2.2} /> Invito inviato a te ({form.email}) e al
-                    barbiere ({barber}). Controlla la tua casella email: apri l'allegato .ics e tocca
-                    "Aggiungi al calendario".
+                    <Icon name="check" size={17} stroke={2.2} />{" "}
+                    {t("Invito inviato a te ({email}) e al barbiere ({barber}). Controlla la tua casella email: apri l'allegato .ics e tocca \"Aggiungi al calendario\".", { email: form.email, barber })}
                   </div>
                 ) : sendState === "failed" ? (
                   <div
@@ -1262,42 +1544,41 @@ function DoneStep({ service, dateISO, time, barber, code, form, uid, headingRef,
                       fontSize: ".82rem", fontWeight: 600, lineHeight: 1.5,
                     }}
                   >
-                    <Icon name="user" size={17} /> Non siamo riusciti a inviare l'invito via email.
-                    Usa i pulsanti qui sotto per aggiungere l'appuntamento al calendario e avvisa il
-                    salone al telefono.
+                    <Icon name="user" size={17} />{" "}
+                    {t("Non siamo riusciti a inviare l'invito via email. Usa i pulsanti qui sotto per aggiungere l'appuntamento al calendario e avvisa il salone al telefono.")}
                   </div>
                 ) : null}
 
                 <div className="ticket">
           <div className="ticket-top">
-            <p className="ticket-code">Codice {code}</p>
-            <p className="ticket-svc">{service.name}</p>
+            <p className="ticket-code">{t("Codice {code}", { code })}</p>
+            <p className="ticket-svc">{serviceName(service)}</p>
             <p className="ticket-when">
-              {cap(longDate(dateISO))} · ore {hhmm(time)}–{hhmm(end.getHours() * 60 + end.getMinutes())}
+              {t("{date} · ore {a}–{b}", { date: cap(longDate(dateISO)), a: hhmm(time), b: hhmm(end.getHours() * 60 + end.getMinutes()) })}
             </p>
           </div>
           <div className="ticket-body">
             <div className="dashes" aria-hidden="true" />
             <dl>
               <div className="recap-row">
-                <dt>Durata</dt>
-                <dd>{service.min} minuti</dd>
+                <dt>{t("Durata")}</dt>
+                <dd>{t("{n} minuti", { n: service.min })}</dd>
               </div>
               <div className="recap-row">
-                <dt>Barbiere</dt>
+                <dt>{t("Barbiere")}</dt>
                 <dd>{barber}</dd>
               </div>
               <div className="recap-row">
-                <dt>Indirizzo</dt>
+                <dt>{t("Indirizzo")}</dt>
                 <dd>{SALON.address}</dd>
               </div>
               <div className="recap-row">
-                <dt>Da pagare in salone</dt>
+                <dt>{t("Da pagare in salone")}</dt>
                 <dd>€{service.price}</dd>
               </div>
               <div className="recap-row">
-                <dt>Promemoria</dt>
-                <dd>SMS 2 ore prima</dd>
+                <dt>{t("Promemoria")}</dt>
+                <dd>{t("SMS 2 ore prima")}</dd>
               </div>
             </dl>
           </div>
@@ -1306,7 +1587,7 @@ function DoneStep({ service, dateISO, time, barber, code, form, uid, headingRef,
         <div className="actions">
           <button type="button" className="btn btn-primary btn-block" onClick={handleICS}>
             <Icon name="calendar" size={20} />
-            Aggiungi al calendario (.ics)
+            {t("Aggiungi al calendario (.ics)")}
           </button>
           <a
             className="btn btn-ghost btn-block"
@@ -1315,7 +1596,7 @@ function DoneStep({ service, dateISO, time, barber, code, form, uid, headingRef,
             rel="noopener noreferrer"
           >
             <Icon name="calendar" size={20} />
-            Apri in Google Calendar
+            {t("Apri in Google Calendar")}
           </a>
           <a
             className="btn btn-ghost btn-block"
@@ -1323,21 +1604,19 @@ function DoneStep({ service, dateISO, time, barber, code, form, uid, headingRef,
             target="_blank"
             rel="noopener noreferrer"
           >
-            Invia la conferma su WhatsApp
+            {t("Invia la conferma su WhatsApp")}
           </a>
         </div>
 
         {downloaded ? (
           <p className="ok-note" role="status">
             <Icon name="check" size={17} stroke={2.2} />
-            File pronto: {downloaded}
+            {t("File pronto: {name}", { name: downloaded })}
           </p>
         ) : null}
 
         <p className="fineprint">
-          Il file .ics si apre direttamente nell’app Calendario su iPhone e in Google Calendar su
-          Android. Se il download è bloccato dal browser, usa il pulsante Google Calendar: è già
-          compilato con data, ora, durata e indirizzo del salone.
+          {t("Il file .ics si apre direttamente nell’app Calendario su iPhone e in Google Calendar su Android. Se il download è bloccato dal browser, usa il pulsante Google Calendar: è già compilato con data, ora, durata e indirizzo del salone.")}
         </p>
       </section>
     </>
@@ -1345,20 +1624,13 @@ function DoneStep({ service, dateISO, time, barber, code, form, uid, headingRef,
 }
 
 function InfoPanel({ todayDow }) {
-  const rows = [
-    { dow: 1, label: "Lunedì" },
-    { dow: 2, label: "Martedì" },
-    { dow: 3, label: "Mercoledì" },
-    { dow: 4, label: "Giovedì" },
-    { dow: 5, label: "Venerdì" },
-    { dow: 6, label: "Sabato" },
-    { dow: 0, label: "Domenica" },
-  ];
+  const { t } = useT();
+  const rows = [1, 2, 3, 4, 5, 6, 0].map((dow) => ({ dow, label: cap(WD_LONG[LANG][dow]) }));
   return (
-    <aside className="info" aria-label="Informazioni sul salone">
-      <h2>Il salone</h2>
+    <aside className="info" aria-label={t("Informazioni sul salone")}>
+      <h2>{t("Il salone")}</h2>
       <div className="info-card">
-        <p>{SALON.story}</p>
+        <p>{t(SALON.story, { name: SALON.name })}</p>
         <ul className="info-lines" style={{ marginTop: 14 }}>
           <li>
             <Icon name="pin" size={18} />
@@ -1366,7 +1638,7 @@ function InfoPanel({ todayDow }) {
               {SALON.address}
               <br />
               <a href={SALON.mapUrl} target="_blank" rel="noopener noreferrer" style={{ color: "var(--accent)" }}>
-                Apri in Google Maps
+                {t("Apri in Google Maps")}
               </a>
             </span>
           </li>
@@ -1380,12 +1652,12 @@ function InfoPanel({ todayDow }) {
           </li>
           <li>
             <Icon name="clock" size={18} />
-            <span>Consigliata la prenotazione online: in negozio restano pochi posti.</span>
+            <span>{t("Consigliata la prenotazione online: in negozio restano pochi posti.")}</span>
           </li>
         </ul>
       </div>
 
-      <h2>Orari</h2>
+      <h2>{t("Orari")}</h2>
       <div className="info-card">
         <ul className="hours">
           {rows.map((r) => {
@@ -1394,10 +1666,10 @@ function InfoPanel({ todayDow }) {
               <li key={r.label} className={r.dow === todayDow ? "is-today" : ""}>
                 <span>
                   {r.label}
-                  {r.dow === todayDow ? <span className="day-tag">oggi</span> : null}
+                  {r.dow === todayDow ? <span className="day-tag">{t("oggi")}</span> : null}
                 </span>
                 <span className={h ? "" : "closed"}>
-                  {h ? `${hhmm(h.open)}–${hhmm(h.close)}` : "chiuso"}
+                  {h ? `${hhmm(h.open)}–${hhmm(h.close)}` : t("chiuso")}
                 </span>
               </li>
             );
@@ -1405,13 +1677,13 @@ function InfoPanel({ todayDow }) {
         </ul>
       </div>
 
-      <h2>Buono a sapersi</h2>
+      <h2>{t("Buono a sapersi")}</h2>
       <div className="info-card">
         <ul className="info-lines">
           {SALON.policies.map((p) => (
             <li key={p}>
               <Icon name="check" size={17} stroke={2.1} />
-              <span>{p}</span>
+              <span>{t(p)}</span>
             </li>
           ))}
         </ul>
@@ -1420,21 +1692,22 @@ function InfoPanel({ todayDow }) {
       <p className="info-foot">
         {SALON.name} · {SALON.piva}
         <br />
-        Disponibilità in tempo reale: prenota e ricevi l'invito via email sul tuo calendario.
+        {t("Disponibilità in tempo reale: prenota e ricevi l'invito via email sul tuo calendario.")}
       </p>
     </aside>
   );
 }
 
 function SiblingsStrip() {
+  const { t } = useT();
   const sibs = SALON.siblings || [];
   if (!sibs.length) return null;
   const base = (location.hostname || "").split(".");
   const domain = base.length > 1 ? base.slice(1).join(".") : "example.com";
   const cur = SALON.slug || SALON_SLUG;
   return (
-    <div className="sib-strip" role="navigation" aria-label="Scegli la postazione">
-      <span className="sib-label">Postazioni del salone:</span>
+    <div className="sib-strip" role="navigation" aria-label={t("Scegli la postazione")}>
+      <span className="sib-label">{t("Postazioni del salone:")}</span>
       {sibs.map((s) => (
         <a
           key={s.slug}
@@ -1452,6 +1725,14 @@ function SiblingsStrip() {
  *  App
  * ------------------------------------------------------------------ */
 function App() {
+  const [lang, setLangState] = useState(LANG);
+  const t = useMemo(() => makeT(lang), [lang]);
+  const toggleLang = () => {
+    const l = lang === "it" ? "en" : "it";
+    saveLang(l);
+    setLangState(l);
+  };
+  const ctx = { lang, t, toggle: toggleLang };
   const [step, setStep] = useState(0);
   const [serviceId, setServiceId] = useState(null);
   const [weekOffset, setWeekOffset] = useState(0);
@@ -1481,6 +1762,12 @@ function App() {
       .catch(() => {})
       .finally(() => setSalonReady(true));
   }, []);
+
+  // titolo della scheda e attributo lang dell'HTML seguono la lingua scelta
+  useEffect(() => {
+    try { document.documentElement.lang = lang; } catch (e) { /* ignora */ }
+    try { document.title = `${SALON.name} — ${makeT(lang)("Prenota online")}`; } catch (e) { /* ignora */ }
+  }, [lang, salonReady]);
 
   const service = SERVICES.find((s) => s.id === serviceId) || null;
 
@@ -1579,15 +1866,15 @@ function App() {
   const validate = (values) => {
     const next = {};
     const name = values.name.trim();
-    if (name.length < 2) next.name = "Inserisci nome e cognome (almeno 2 caratteri).";
-    else if (!name.includes(" ")) next.name = "Aggiungi anche il cognome, così ti riconosciamo alla cassa.";
+    if (name.length < 2) next.name = t("Inserisci nome e cognome (almeno 2 caratteri).");
+    else if (!name.includes(" ")) next.name = t("Aggiungi anche il cognome, così ti riconosciamo alla cassa.");
     const digits = values.phone.replace(/\D/g, "");
-    if (digits.length === 0) next.phone = "Inserisci il numero di telefono.";
-    else if (digits.length < 9 || digits.length > 13) next.phone = "Numero non valido: usa almeno 9 cifre, es. 335 118 4471.";
+    if (digits.length === 0) next.phone = t("Inserisci il numero di telefono.");
+    else if (digits.length < 9 || digits.length > 13) next.phone = t("Numero non valido: usa almeno 9 cifre, es. 335 118 4471.");
     const email = values.email.trim();
-    if (email.length === 0) next.email = "Inserisci l'email: ti arrivano il promemoria e l'invito al calendario.";
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) next.email = "Email non valida. Controlla l'indirizzo, es. nome@esempio.it";
-    if (!values.consent) next.consent = "Serve il consenso per gestire la prenotazione.";
+    if (email.length === 0) next.email = t("Inserisci l'email: ti arrivano il promemoria e l'invito al calendario.");
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) next.email = t("Email non valida. Controlla l'indirizzo, es. nome@esempio.it");
+    if (!values.consent) next.consent = t("Serve il consenso per gestire la prenotazione.");
     return next;
   };
 
@@ -1660,7 +1947,7 @@ function App() {
         setTime(null);
         setBookFeedback({
           type: "conflict",
-          msg: `L'orario delle ${hhmm(snapshot.time)} è appena stato prenotato da qualcun altro. Scegline uno ancora libero qui sotto.`,
+          msg: t("L'orario delle {time} è appena stato prenotato da qualcun altro. Scegline uno ancora libero qui sotto.", { time: hhmm(snapshot.time) }),
         });
         setAvailTick((t) => t + 1);
         setStep(0);
@@ -1678,14 +1965,14 @@ function App() {
       setSendState(null);
       setBookFeedback({
         type: "error",
-        msg: (data && data.error) || "Non è stato possibile completare la prenotazione.",
+        msg: (data && data.error) || t("Non è stato possibile completare la prenotazione."),
       });
       setStep(0);
     } catch (e) {
       setSendState(null);
       setBookFeedback({
         type: "error",
-        msg: "Server non raggiungibile. Riprova tra qualche secondo.",
+        msg: t("Server non raggiungibile. Riprova tra qualche secondo."),
       });
       setStep(0);
     }
@@ -1718,24 +2005,27 @@ function App() {
     return true;
   })();
   const ctaValue = ready
-    ? `${service.name} · ${cap(shortDate(dateISO))} · ${hhmm(time)}`
+    ? `${serviceName(service)} · ${cap(shortDate(dateISO))} · ${hhmm(time)}`
     : service
-    ? `${service.name} · scegli un orario`
-    : "Scegli servizio e orario";
+    ? t("{name} · scegli un orario", { name: serviceName(service) })
+    : t("Scegli servizio e orario");
 
   if (!salonReady) {
     return (
+      <LangCtx.Provider value={ctx}>
       <div className="page">
         <style>{CSS}</style>
         <div className="brand" style={{ padding: "20px" }}>
           <h1 className="wordmark">{SALON.name}</h1>
-          <p className="brand-note">Caricamento…</p>
+          <p className="brand-note">{t("Caricamento…")}</p>
         </div>
       </div>
+      </LangCtx.Provider>
     );
   }
 
   return (
+    <LangCtx.Provider value={ctx}>
     <div className="page">
       <style>{CSS}</style>
       <div className="shell">
@@ -1745,27 +2035,37 @@ function App() {
             <div className="brand-top">
               <PoleMark />
               <div style={{ minWidth: 0 }}>
-                <p className="brand-eyebrow">{SALON.tagline}</p>
+                <p className="brand-eyebrow">{t(SALON.tagline)}</p>
                 <h1 className="wordmark">{SALON.name}</h1>
               </div>
               <span className={`open-chip${status.open ? "" : " is-closed"}`}>
                 <span className="dot" aria-hidden="true" />
-                {status.label}
+                {statusLabel(status)}
               </span>
+              <button
+                type="button"
+                className="lang-btn"
+                onClick={ctx.toggle}
+                aria-label={lang === "it" ? "Passa all'inglese" : "Switch to Italian"}
+                title={lang === "it" ? "Passa all'inglese" : "Switch to Italian"}
+              >
+                <FlagIcon code={lang === "it" ? "en" : "it"} />
+                <span>{lang === "it" ? "EN" : "IT"}</span>
+              </button>
             </div>
             <p className="brand-sub">
               {SALON.address} ·{" "}
               <a href={`tel:${SALON.phoneHref}`}>{SALON.phoneLabel}</a>
             </p>
             <p className="brand-note">
-              Prenotazione senza account: bastano nome e numero di telefono.
+              {t("Prenotazione senza account: bastano nome e numero di telefono.")}
             </p>
           </header>
 
           <Stepper step={step} onGo={(i) => (sendState === "loading" ? null : (i < step ? setStep(i) : null))} />
 
           <div aria-live="polite" className="sr-only">
-            Passo {step + 1} di 3: {["servizio e orario", "dati cliente", "conferma"][step]}
+            {t("Passo {n} di 3: {step}", { n: step + 1, step: t(["servizio e orario", "dati cliente", "conferma"][step]) })}
           </div>
 
           <main>
@@ -1844,7 +2144,7 @@ function App() {
             <div className="cta">
               <div className="cta-inner">
                 <div className="cta-info">
-                  <span className="cta-label">Riepilogo</span>
+                  <span className="cta-label">{t("Riepilogo")}</span>
                   <span className="cta-value">{ctaValue}</span>
                 </div>
                 <button
@@ -1853,7 +2153,7 @@ function App() {
                   disabled={!ready || sendState === "loading"}
                   onClick={goToDetails}
                 >
-                  Continua
+                  {t("Continua")}
                 </button>
               </div>
             </div>
@@ -1864,14 +2164,14 @@ function App() {
               <div className="cta-row">
                 <button type="button" className="btn btn-ghost" onClick={() => setStep(0)} disabled={sendState === "loading"}>
                   <Icon name="chevronLeft" size={18} stroke={2} />
-                  Indietro
+                  {t("Indietro")}
                 </button>
                 <button type="button" className="btn btn-primary" onClick={confirm} disabled={sendState === "loading"}>
-                  {sendState === "loading" ? "Invio in corso…" : "Conferma prenotazione"}
+                  {sendState === "loading" ? t("Invio in corso…") : t("Conferma prenotazione")}
                 </button>
               </div>
               <p className="fineprint" style={{ marginTop: 10 }}>
-                Nessun pagamento online: {`€${confirmed ? confirmed.service.price : (service ? service.price : 0)}`} da saldare in salone.
+                {t("Nessun pagamento online: {amount} da saldare in salone.", { amount: `€${confirmed ? confirmed.service.price : (service ? service.price : 0)}` })}
               </p>
             </div>
           ) : null}
@@ -1880,10 +2180,10 @@ function App() {
             <div className="cta">
               <div className="cta-row">
                 <button type="button" className="btn btn-ghost" onClick={reset}>
-                  Prenota un altro appuntamento
+                  {t("Prenota un altro appuntamento")}
                 </button>
                 <a className="btn btn-dark" href={`tel:${SALON.phoneHref}`}>
-                  Chiama il salone
+                  {t("Chiama il salone")}
                 </a>
               </div>
             </div>
@@ -1893,6 +2193,7 @@ function App() {
         <InfoPanel todayDow={new Date().getDay()} />
       </div>
     </div>
+    </LangCtx.Provider>
   );
 }
 

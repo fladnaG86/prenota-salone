@@ -7,6 +7,266 @@ const TWEAK_DEFAULTS = (
     "cornerRadius": 18
   }
 );
+const EN = {
+  "Prenota online": "Book online",
+  "Prenotazione senza account: bastano nome e numero di telefono.": "No account needed: just your name and phone number.",
+  "Caricamento\u2026": "Loading\u2026",
+  "Servizio e ora": "Service & time",
+  "I tuoi dati": "Your details",
+  "Conferma": "Confirm",
+  "Avanzamento della prenotazione": "Booking progress",
+  "Passo {n}: ": "Step {n}: ",
+  "Servizi disponibili": "Available services",
+  "Pi\xF9 richiesto": "Most popular",
+  "Settimana precedente": "Previous week",
+  "Settimana successiva": "Next week",
+  "Torna a oggi": "Back to today",
+  "Giorni della settimana": "Days of the week",
+  "chiuso": "closed",
+  "trascorso": "past",
+  "completo": "full",
+  "{n} posti": "{n} seats",
+  "{n} posti liberi": "{n} seats free",
+  "Fascia oraria": "Time slots",
+  "{a} slot liberi su {b}": "{a} of {b} slots free",
+  "Filtro slot": "Slot filter",
+  "Tutti": "All",
+  "Solo liberi": "Free only",
+  "libero": "free",
+  "ultimo posto": "last seat",
+  "Caricamento disponibilit\xE0\u2026": "Loading availability\u2026",
+  "Nessuno slot libero in questa giornata.": "No free slots on this day.",
+  "Prova un altro giorno della settimana: di solito si libera qualcosa il pomeriggio.": "Try another day of the week: a slot usually frees up in the afternoon.",
+  "Orari disponibili {date}": "Available times on {date}",
+  "Ultimo posto": "Last seat",
+  "Completo": "Full",
+  "Trascorso": "Past",
+  "Passo 1 \xB7 Servizio": "Step 1 \xB7 Service",
+  "Cosa ti serve oggi?": "What do you need today?",
+  "La durata scelta determina l'orario di fine appuntamento nel calendario.": "The chosen duration sets the appointment end time in your calendar.",
+  "Disponibilit\xE0": "Availability",
+  "Scegli giorno e ora": "Choose day and time",
+  "Prima disponibilit\xE0": "Earliest availability",
+  "{date} \xB7 ore {time}": "{date} \xB7 at {time}",
+  "Passo 2 \xB7 Dati cliente": "Step 2 \xB7 Your details",
+  "A nome di chi prenoto?": "Who is the booking for?",
+  "Servizio": "Service",
+  "Data": "Date",
+  "Orario": "Time",
+  "Barbiere": "Barber",
+  "Da pagare in salone": "Pay at the salon",
+  "Dati per la prenotazione": "Booking details",
+  "Nome e cognome": "Full name",
+  "(obbligatorio)": "(required)",
+  "Telefono": "Phone",
+  "Solo per conferma e promemoria 2 ore prima. Nessun account da creare.": "Only for confirmation and a reminder 2 hours before. No account needed.",
+  "Email": "Email",
+  "Ti mandiamo qui l'invito pronto da aggiungere al tuo calendario.": "We'll send you a ready-to-add calendar invite here.",
+  "Es. Andrea Colombo": "e.g. Andrea Colombo",
+  "Es. 335 118 4471": "e.g. 335 118 4471",
+  "Es. nome@esempio.it": "e.g. name@example.com",
+  "Note per il barbiere": "Notes for the barber",
+  "facoltativo": "optional",
+  "Es. Macchinetta 1 ai lati, forbice sopra. Arrivo con mio figlio.": "e.g. Clippers #1 on the sides, scissor on top. Coming with my son.",
+  "{n} caratteri disponibili": "{n} characters left",
+  "Acconsento al trattamento dei dati (nome, telefono, note) per gestire questa prenotazione e inviarmi il promemoria.": "I agree to the processing of my data (name, phone, notes) to manage this booking and send me the reminder.",
+  "Leggi l'informativa sulla privacy": "Read the privacy policy",
+  "Controlla i campi segnalati: manca poco per completare la prenotazione.": "Check the highlighted fields: you're almost done.",
+  "Codice prenotazione: {code}": "Booking code: {code}",
+  "Servizio: {name} ({min} min) \u2014 \u20AC{price}": "Service: {name} ({min} min) \u2014 \u20AC{price}",
+  "Barbiere: {barber}": "Barber: {barber}",
+  "Cliente: {name}{phone}": "Client: {name}{phone}",
+  "Note: {note}": "Notes: {note}",
+  "Per annullare: apri il link \xABAnnulla la prenotazione\xBB nell'email di conferma.": "To cancel: open the \xABCancel booking\xBB link in the confirmation email.",
+  "Ciao {salon}! Ho prenotato: {service}, {date} alle {time} (codice {code}).": "Hi {salon}! I booked: {service}, {date} at {time} (code {code}).",
+  "Passo 3 \xB7 Conferma": "Step 3 \xB7 Confirmation",
+  "Appuntamento confermato": "Appointment confirmed",
+  "Ti aspettiamo in {address}. Arriva 5 minuti prima: il tempo di un caff\xE8.": "See you at {address}. Arrive 5 minutes early \u2014 time for a coffee.",
+  'Invito inviato a te ({email}) e al barbiere ({barber}). Controlla la tua casella email: apri l\'allegato .ics e tocca "Aggiungi al calendario".': 'Invite sent to you ({email}) and the barber ({barber}). Check your inbox: open the .ics attachment and tap "Add to calendar".',
+  "Non siamo riusciti a inviare l'invito via email. Usa i pulsanti qui sotto per aggiungere l'appuntamento al calendario e avvisa il salone al telefono.": "We couldn't send the invite by email. Use the buttons below to add the appointment to your calendar and call the salon.",
+  "Codice {code}": "Code {code}",
+  "{date} \xB7 ore {a}\u2013{b}": "{date} \xB7 {a}\u2013{b}",
+  "Durata": "Duration",
+  "{n} minuti": "{n} minutes",
+  "Indirizzo": "Address",
+  "Promemoria": "Reminder",
+  "SMS 2 ore prima": "SMS 2 hours before",
+  "Aggiungi al calendario (.ics)": "Add to calendar (.ics)",
+  "Apri in Google Calendar": "Open in Google Calendar",
+  "Invia la conferma su WhatsApp": "Send the confirmation on WhatsApp",
+  "File pronto: {name}": "File ready: {name}",
+  "Il file .ics si apre direttamente nell\u2019app Calendario su iPhone e in Google Calendar su Android. Se il download \xE8 bloccato dal browser, usa il pulsante Google Calendar: \xE8 gi\xE0 compilato con data, ora, durata e indirizzo del salone.": "The .ics file opens directly in the Calendar app on iPhone and in Google Calendar on Android. If your browser blocks the download, use the Google Calendar button: it's already filled with date, time, duration and the salon address.",
+  "Informazioni sul salone": "Salon information",
+  "Il salone": "The salon",
+  "Apri in Google Maps": "Open in Google Maps",
+  "Consigliata la prenotazione online: in negozio restano pochi posti.": "Online booking recommended: only a few walk-in slots left.",
+  "Orari": "Opening hours",
+  "oggi": "today",
+  "Buono a sapersi": "Good to know",
+  "Disponibilit\xE0 in tempo reale: prenota e ricevi l'invito via email sul tuo calendario.": "Real-time availability: book and get the calendar invite by email.",
+  "Scegli la postazione": "Choose a station",
+  "Postazioni del salone:": "Salon stations:",
+  "Passo {n} di 3: {step}": "Step {n} of 3: {step}",
+  "servizio e orario": "service and time",
+  "dati cliente": "your details",
+  "conferma": "confirmation",
+  "Riepilogo": "Summary",
+  "Continua": "Continue",
+  "Indietro": "Back",
+  "Invio in corso\u2026": "Sending\u2026",
+  "Conferma prenotazione": "Confirm booking",
+  "Nessun pagamento online: {amount} da saldare in salone.": "No online payment: {amount} to pay at the salon.",
+  "Prenota un altro appuntamento": "Book another appointment",
+  "Chiama il salone": "Call the salon",
+  "{name} \xB7 scegli un orario": "{name} \xB7 pick a time",
+  "Scegli servizio e orario": "Choose service and time",
+  "Inserisci nome e cognome (almeno 2 caratteri).": "Enter your full name (at least 2 characters).",
+  "Aggiungi anche il cognome, cos\xEC ti riconosciamo alla cassa.": "Please add your last name so we recognise you at the desk.",
+  "Inserisci il numero di telefono.": "Enter your phone number.",
+  "Numero non valido: usa almeno 9 cifre, es. 335 118 4471.": "Invalid number: use at least 9 digits, e.g. 335 118 4471.",
+  "Inserisci l'email: ti arrivano il promemoria e l'invito al calendario.": "Enter your email: you'll get the reminder and the calendar invite.",
+  "Email non valida. Controlla l'indirizzo, es. nome@esempio.it": "Invalid email. Check the address, e.g. name@example.com",
+  "Serve il consenso per gestire la prenotazione.": "Consent is required to manage the booking.",
+  "L'orario delle {time} \xE8 appena stato prenotato da qualcun altro. Scegline uno ancora libero qui sotto.": "The {time} slot was just booked by someone else. Pick one that's still free below.",
+  "Non \xE8 stato possibile completare la prenotazione.": "The booking couldn't be completed.",
+  "Server non raggiungibile. Riprova tra qualche secondo.": "Server unreachable. Please try again in a moment.",
+  "Aperto ora \xB7 chiude alle {time}": "Open now \xB7 closes at {time}",
+  "Chiuso \xB7 apre oggi alle {time}": "Closed \xB7 opens today at {time}",
+  "Chiuso \xB7 apre {when} alle {time}": "Closed \xB7 opens {when} at {time}",
+  "Chiuso": "Closed",
+  "domani": "tomorrow",
+  "Barbiere uomo \xB7 dal 2014": "Men's barber \xB7 since 2014",
+  "Tre poltrone, forbici e rasoio a mano libera. Caff\xE8 offerto, musica bassa e nessuna fretta.": "Three chairs, scissors and a straight razor. Free coffee, quiet music and no rush.",
+  "Prenota online su {name}: scegli servizio, barbiere e orario. Nessun account necessario.": "Book online at {name}: choose service, barber and time. No account needed.",
+  "Disdetta: apri il link \xABAnnulla la prenotazione\xBB nell'email di conferma.": "Cancellation: open the \xABCancel booking\xBB link in the confirmation email.",
+  "Paghi in salone: contanti, bancomat o carta di credito.": "Pay at the salon: cash, debit or credit card.",
+  "Paghi in salone: contanti, bancomat o carta.": "Pay at the salon: cash, debit or credit card.",
+  "Nessun anticipo e nessun account da creare per prenotare.": "No deposit and no account to create to book.",
+  "Nessun account da creare per prenotare.": "No account to create to book.",
+  "Macchinetta, forbice e finitura a rasoio.": "Clippers, scissors and a razor finish.",
+  "Il pacchetto completo, il pi\xF9 richiesto.": "The complete package, our most requested.",
+  "Contorni a rasoio, panno caldo e olio.": "Razor edges, hot towel and oil.",
+  "Rasoio a mano libera, due passate.": "Straight razor, two passes.",
+  "Fino a 12 anni, con mamma o pap\xE0.": "Up to 12 years old, with mum or dad.",
+  "Shampoo, massaggio e lozione finale.": "Shampoo, massage and finishing lotion.",
+  "Taglio e rifinitura su misura.": "Tailored cut and finish.",
+  "Il pacchetto completo.": "The complete package.",
+  "Contorni curati a rasoio e panno caldo.": "Razor-clean edges and hot towel.",
+  "Rasatura tradizionale a mano libera.": "Traditional straight-razor shave.",
+  "Taglio per i pi\xF9 piccoli.": "A cut for the little ones."
+};
+const WD_SHORT = {
+  it: ["DOM", "LUN", "MAR", "MER", "GIO", "VEN", "SAB"],
+  en: ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"]
+};
+const WD_LONG = {
+  it: ["domenica", "luned\xEC", "marted\xEC", "mercoled\xEC", "gioved\xEC", "venerd\xEC", "sabato"],
+  en: ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"]
+};
+const MONTHS = {
+  it: [
+    "gennaio",
+    "febbraio",
+    "marzo",
+    "aprile",
+    "maggio",
+    "giugno",
+    "luglio",
+    "agosto",
+    "settembre",
+    "ottobre",
+    "novembre",
+    "dicembre"
+  ],
+  en: [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
+  ]
+};
+const LANG_KEY = "barberia_lang";
+function detectLang() {
+  try {
+    const stored = localStorage.getItem(LANG_KEY);
+    if (stored === "it" || stored === "en") return stored;
+  } catch (e) {
+  }
+  try {
+    return String(navigator.language || "").toLowerCase().startsWith("it") ? "it" : "en";
+  } catch (e) {
+    return "it";
+  }
+}
+let LANG = detectLang();
+function makeT(lang) {
+  return function t(s, params) {
+    let out = lang === "en" && Object.prototype.hasOwnProperty.call(EN, s) ? EN[s] : s;
+    if (params) {
+      Object.keys(params).forEach((k) => {
+        out = out.split("{" + k + "}").join(String(params[k]));
+      });
+    }
+    return out;
+  };
+}
+function saveLang(lang) {
+  LANG = lang;
+  try {
+    localStorage.setItem(LANG_KEY, lang);
+  } catch (e) {
+  }
+  try {
+    document.documentElement.lang = lang;
+  } catch (e) {
+  }
+}
+const SERVICE_IT_NAMES = {
+  taglio: "Taglio classico",
+  "taglio-barba": "Taglio + barba",
+  barba: "Barba modellata",
+  rasatura: "Rasatura tradizionale",
+  bambino: "Taglio bambino",
+  rituale: "Rituale capelli e cute"
+};
+const SERVICE_EN_NAMES = {
+  taglio: "Classic cut",
+  "taglio-barba": "Cut + beard",
+  barba: "Beard shaping",
+  rasatura: "Traditional shave",
+  bambino: "Kids' cut",
+  rituale: "Hair & scalp ritual"
+};
+function serviceName(s) {
+  if (!s) return "";
+  if (LANG === "en" && SERVICE_EN_NAMES[s.id] && SERVICE_IT_NAMES[s.id] === s.name) {
+    return SERVICE_EN_NAMES[s.id];
+  }
+  return s.name;
+}
+const LangCtx = React.createContext({ lang: "it", t: (s) => s, toggle: () => {
+} });
+function useT() {
+  return React.useContext(LangCtx);
+}
+function statusLabel(s) {
+  const t = makeT(LANG);
+  if (s.kind === "now") return t("Aperto ora \xB7 chiude alle {time}", { time: s.time });
+  if (s.kind === "today") return t("Chiuso \xB7 apre oggi alle {time}", { time: s.time });
+  if (s.kind === "later") {
+    const when = s.days === 1 ? t("domani") : WD_LONG[LANG][s.dow];
+    return t("Chiuso \xB7 apre {when} alle {time}", { when, time: s.time });
+  }
+  return t("Chiuso");
+}
 let SALON = {
   name: "Barberia Lambrate",
   tagline: "Barbiere uomo \xB7 dal 2014",
@@ -104,9 +364,6 @@ function applySalon(cfg) {
     note: SERVICE_NOTES[s.id] || "Su misura."
   }));
 }
-const WD_SHORT = ["DOM", "LUN", "MAR", "MER", "GIO", "VEN", "SAB"];
-const WD_LONG = ["domenica", "luned\xEC", "marted\xEC", "mercoled\xEC", "gioved\xEC", "venerd\xEC", "sabato"];
-const MONTHS = ["gennaio", "febbraio", "marzo", "aprile", "maggio", "giugno", "luglio", "agosto", "settembre", "ottobre", "novembre", "dicembre"];
 const pad = (n) => String(n).padStart(2, "0");
 const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 function isoDate(d) {
@@ -187,21 +444,21 @@ function weekDays(offset) {
 function longDate(dateISO) {
   if (!dateISO) return "";
   const d = parseISO(dateISO);
-  return `${WD_LONG[d.getDay()]} ${d.getDate()} ${MONTHS[d.getMonth()]}`;
+  return `${WD_LONG[LANG][d.getDay()]} ${d.getDate()} ${MONTHS[LANG][d.getMonth()]}`;
 }
 function shortDate(dateISO) {
   if (!dateISO) return "";
   const d = parseISO(dateISO);
-  return `${WD_SHORT[d.getDay()]} ${d.getDate()} ${MONTHS[d.getMonth()].slice(0, 3)}`;
+  return `${WD_SHORT[LANG][d.getDay()]} ${d.getDate()} ${MONTHS[LANG][d.getMonth()].slice(0, 3)}`;
 }
 function weekLabel(offset) {
   const days = weekDays(offset);
   const a = days[0];
   const b = days[5];
   if (a.getMonth() === b.getMonth()) {
-    return `${a.getDate()} \u2013 ${b.getDate()} ${MONTHS[b.getMonth()]} ${b.getFullYear()}`;
+    return `${a.getDate()} \u2013 ${b.getDate()} ${MONTHS[LANG][b.getMonth()]} ${b.getFullYear()}`;
   }
-  return `${a.getDate()} ${MONTHS[a.getMonth()]} \u2013 ${b.getDate()} ${MONTHS[b.getMonth()]} ${b.getFullYear()}`;
+  return `${a.getDate()} ${MONTHS[LANG][a.getMonth()]} \u2013 ${b.getDate()} ${MONTHS[LANG][b.getMonth()]} ${b.getFullYear()}`;
 }
 function firstBookableISO(avail) {
   const today = /* @__PURE__ */ new Date();
@@ -220,19 +477,20 @@ function openStatus() {
   const mins = now.getHours() * 60 + now.getMinutes();
   const today = HOURS[dow];
   if (today && mins >= today.open && mins < today.close) {
-    return { open: true, label: `Aperto ora \xB7 chiude alle ${hhmm(today.close)}` };
+    return { open: true, kind: "now", time: hhmm(today.close) };
   }
   for (let i = 0; i < 8; i++) {
     const d = addDays(now, i);
     const h = HOURS[d.getDay()];
     if (!h) continue;
-    if (i === 0 && mins < h.open) return { open: false, label: `Chiuso \xB7 apre oggi alle ${hhmm(h.open)}` };
+    if (i === 0 && mins < h.open) {
+      return { open: false, kind: "today", time: hhmm(h.open) };
+    }
     if (i > 0) {
-      const when = i === 1 ? "domani" : WD_LONG[d.getDay()];
-      return { open: false, label: `Chiuso \xB7 apre ${when} alle ${hhmm(h.open)}` };
+      return { open: false, kind: "later", dow: d.getDay(), days: i, time: hhmm(h.open) };
     }
   }
-  return { open: false, label: "Chiuso" };
+  return { open: false, kind: "closed" };
 }
 function icsLocal(d) {
   return `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}T${pad(d.getHours())}${pad(d.getMinutes())}00`;
@@ -361,6 +619,12 @@ function Icon({ name, size = 20, stroke = 1.6, className }) {
 function PoleMark() {
   return /* @__PURE__ */ React.createElement("span", { className: "pole", "aria-hidden": "true" });
 }
+function FlagIcon({ code }) {
+  if (code === "it") {
+    return /* @__PURE__ */ React.createElement("svg", { className: "flag", viewBox: "0 0 3 2", width: "22", height: "15", "aria-hidden": "true", focusable: "false" }, /* @__PURE__ */ React.createElement("rect", { width: "1", height: "2", fill: "#009246" }), /* @__PURE__ */ React.createElement("rect", { x: "1", width: "1", height: "2", fill: "#ffffff" }), /* @__PURE__ */ React.createElement("rect", { x: "2", width: "1", height: "2", fill: "#ce2b37" }));
+  }
+  return /* @__PURE__ */ React.createElement("svg", { className: "flag", viewBox: "0 0 60 30", width: "22", height: "15", "aria-hidden": "true", focusable: "false" }, /* @__PURE__ */ React.createElement("clipPath", { id: "gb-clip" }, /* @__PURE__ */ React.createElement("path", { d: "M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z" })), /* @__PURE__ */ React.createElement("rect", { width: "60", height: "30", fill: "#012169" }), /* @__PURE__ */ React.createElement("path", { d: "M0,0 L60,30 M60,0 L0,30", stroke: "#ffffff", strokeWidth: "6" }), /* @__PURE__ */ React.createElement("path", { d: "M0,0 L60,30 M60,0 L0,30", clipPath: "url(#gb-clip)", stroke: "#c8102e", strokeWidth: "4" }), /* @__PURE__ */ React.createElement("path", { d: "M30,0 v30 M0,15 h60", stroke: "#ffffff", strokeWidth: "10" }), /* @__PURE__ */ React.createElement("path", { d: "M30,0 v30 M0,15 h60", stroke: "#c8102e", strokeWidth: "6" }));
+}
 const CSS = `
 *,*::before,*::after{box-sizing:border-box}
 :root{
@@ -413,6 +677,11 @@ button{font-family:inherit}
   padding:7px 11px;border-radius:999px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.16);color:var(--cream)}
 .open-chip .dot{width:7px;height:7px;border-radius:50%;background:color-mix(in oklab,var(--accent) 80%,white)}
 .open-chip.is-closed .dot{background:oklch(0.72 0.02 60)}
+.lang-btn{margin-left:8px;flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;font:inherit;font-size:.72rem;font-weight:700;
+  letter-spacing:.06em;padding:7px 11px;border-radius:999px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.22);
+  color:var(--cream);cursor:pointer;transition:background .16s,border-color .16s}
+.lang-btn:hover{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.34)}
+.lang-btn .flag{display:block;border-radius:2px;box-shadow:0 0 0 1px rgba(255,255,255,.35)}
 .brand-sub{margin:14px 0 0;font-size:.86rem;line-height:1.5;color:color-mix(in oklab,var(--cream) 74%,transparent)}
 .brand-sub a{color:var(--cream);text-decoration:underline;text-underline-offset:2px}
 .brand-note{margin:10px 0 0;font-size:.76rem;color:color-mix(in oklab,var(--cream) 58%,transparent)}
@@ -621,8 +890,9 @@ textarea.input{min-height:96px;resize:vertical;line-height:1.5}
 }
 `;
 function Stepper({ step, onGo }) {
-  const labels = ["Servizio e ora", "I tuoi dati", "Conferma"];
-  return /* @__PURE__ */ React.createElement("nav", { className: "stepper", "aria-label": "Avanzamento della prenotazione" }, labels.map((label, i) => /* @__PURE__ */ React.createElement(
+  const { t } = useT();
+  const labels = [t("Servizio e ora"), t("I tuoi dati"), t("Conferma")];
+  return /* @__PURE__ */ React.createElement("nav", { className: "stepper", "aria-label": t("Avanzamento della prenotazione") }, labels.map((label, i) => /* @__PURE__ */ React.createElement(
     "button",
     {
       key: label,
@@ -633,11 +903,12 @@ function Stepper({ step, onGo }) {
       onClick: () => onGo(i)
     },
     /* @__PURE__ */ React.createElement("span", { className: "step-bar" }),
-    /* @__PURE__ */ React.createElement("span", { className: "step-label" }, /* @__PURE__ */ React.createElement("span", { className: "sr-only" }, "Passo ", i + 1, ": "), label)
+    /* @__PURE__ */ React.createElement("span", { className: "step-label" }, /* @__PURE__ */ React.createElement("span", { className: "sr-only" }, t("Passo {n}: ", { n: i + 1 })), label)
   )));
 }
 function ServiceStrip({ services, value, onChange }) {
-  return /* @__PURE__ */ React.createElement("div", { className: "strip", role: "group", "aria-label": "Servizi disponibili" }, services.map((s) => {
+  const { t } = useT();
+  return /* @__PURE__ */ React.createElement("div", { className: "strip", role: "group", "aria-label": t("Servizi disponibili") }, services.map((s) => {
     const active = s.id === value;
     return /* @__PURE__ */ React.createElement(
       "button",
@@ -648,13 +919,14 @@ function ServiceStrip({ services, value, onChange }) {
         "aria-pressed": active,
         onClick: () => onChange(s.id)
       },
-      /* @__PURE__ */ React.createElement("span", { className: "svc-row" }, /* @__PURE__ */ React.createElement(Icon, { name: s.icon, size: 22 }), s.popular ? /* @__PURE__ */ React.createElement("span", { className: "badge" }, "Pi\xF9 richiesto") : null, /* @__PURE__ */ React.createElement("span", { className: "svc-check" }, /* @__PURE__ */ React.createElement(Icon, { name: "check", size: 18, stroke: 2.2 }))),
-      /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement("span", { className: "svc-name" }, s.name), /* @__PURE__ */ React.createElement("span", { className: "svc-meta", style: { marginTop: 4 } }, /* @__PURE__ */ React.createElement("b", null, s.min, " min"), /* @__PURE__ */ React.createElement("span", { "aria-hidden": "true" }, "\xB7"), /* @__PURE__ */ React.createElement("b", null, "\u20AC", s.price))),
-      /* @__PURE__ */ React.createElement("span", { className: "svc-note" }, s.note)
+      /* @__PURE__ */ React.createElement("span", { className: "svc-row" }, /* @__PURE__ */ React.createElement(Icon, { name: s.icon, size: 22 }), s.popular ? /* @__PURE__ */ React.createElement("span", { className: "badge" }, t("Pi\xF9 richiesto")) : null, /* @__PURE__ */ React.createElement("span", { className: "svc-check" }, /* @__PURE__ */ React.createElement(Icon, { name: "check", size: 18, stroke: 2.2 }))),
+      /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement("span", { className: "svc-name" }, serviceName(s)), /* @__PURE__ */ React.createElement("span", { className: "svc-meta", style: { marginTop: 4 } }, /* @__PURE__ */ React.createElement("b", null, s.min, " min"), /* @__PURE__ */ React.createElement("span", { "aria-hidden": "true" }, "\xB7"), /* @__PURE__ */ React.createElement("b", null, "\u20AC", s.price))),
+      /* @__PURE__ */ React.createElement("span", { className: "svc-note" }, t(s.note))
     );
   }));
 }
 function WeekStrip({ offset, selected, onSelect, onOffset, onToday, canGoBack, avail }) {
+  const { t } = useT();
   const days = useMemo(() => weekDays(offset), [offset]);
   const todayISO = isoDate(/* @__PURE__ */ new Date());
   return /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("div", { className: "week-bar" }, /* @__PURE__ */ React.createElement(
@@ -664,25 +936,25 @@ function WeekStrip({ offset, selected, onSelect, onOffset, onToday, canGoBack, a
       className: "icon-btn",
       onClick: () => onOffset(-1),
       disabled: !canGoBack,
-      "aria-label": "Settimana precedente"
+      "aria-label": t("Settimana precedente")
     },
     /* @__PURE__ */ React.createElement(Icon, { name: "chevronLeft", size: 19, stroke: 2 })
-  ), /* @__PURE__ */ React.createElement("h3", { className: "week-title" }, weekLabel(offset)), /* @__PURE__ */ React.createElement("div", { className: "week-actions" }, offset !== 0 ? /* @__PURE__ */ React.createElement("button", { type: "button", className: "link-btn", onClick: onToday }, "Torna a oggi") : null, /* @__PURE__ */ React.createElement(
+  ), /* @__PURE__ */ React.createElement("h3", { className: "week-title" }, weekLabel(offset)), /* @__PURE__ */ React.createElement("div", { className: "week-actions" }, offset !== 0 ? /* @__PURE__ */ React.createElement("button", { type: "button", className: "link-btn", onClick: onToday }, t("Torna a oggi")) : null, /* @__PURE__ */ React.createElement(
     "button",
     {
       type: "button",
       className: "icon-btn",
       onClick: () => onOffset(1),
-      "aria-label": "Settimana successiva"
+      "aria-label": t("Settimana successiva")
     },
     /* @__PURE__ */ React.createElement(Icon, { name: "chevronRight", size: 19, stroke: 2 })
-  ))), /* @__PURE__ */ React.createElement("div", { className: "days", role: "group", "aria-label": "Giorni della settimana" }, days.map((d) => {
+  ))), /* @__PURE__ */ React.createElement("div", { className: "days", role: "group", "aria-label": t("Giorni della settimana") }, days.map((d) => {
     const iso = isoDate(d);
     const s = daySummary(iso, avail);
     const disabled = s.loaded && (s.closed || s.allPast || s.free === 0);
     const active = iso === selected;
     const isToday = iso === todayISO;
-    const sub = !s.loaded ? "\u2026" : s.closed ? "chiuso" : s.allPast ? "trascorso" : s.free === 0 ? "completo" : `${s.free} posti`;
+    const sub = !s.loaded ? "\u2026" : s.closed ? t("chiuso") : s.allPast ? t("trascorso") : s.free === 0 ? t("completo") : t("{n} posti", { n: s.free });
     return /* @__PURE__ */ React.createElement(
       "button",
       {
@@ -693,15 +965,16 @@ function WeekStrip({ offset, selected, onSelect, onOffset, onToday, canGoBack, a
         disabled,
         onClick: () => onSelect(iso)
       },
-      /* @__PURE__ */ React.createElement("span", { className: "day-abbr" }, WD_SHORT[d.getDay()]),
+      /* @__PURE__ */ React.createElement("span", { className: "day-abbr" }, WD_SHORT[LANG][d.getDay()]),
       /* @__PURE__ */ React.createElement("span", { className: "day-num" }, d.getDate()),
       /* @__PURE__ */ React.createElement("span", { className: "day-free" }, sub),
       isToday ? /* @__PURE__ */ React.createElement("span", { className: "day-today", "aria-hidden": "true" }) : null,
-      /* @__PURE__ */ React.createElement("span", { className: "sr-only" }, longDate(iso), disabled ? `, ${sub}` : `, ${s.free} posti liberi`)
+      /* @__PURE__ */ React.createElement("span", { className: "sr-only" }, longDate(iso), disabled ? `, ${sub}` : `, ${t("{n} posti liberi", { n: s.free })}`)
     );
   })));
 }
 function SlotGrid({ dateISO, value, onSelect, onlyFree, onToggleFree, avail, service }) {
+  const { t } = useT();
   const loaded = isAvailLoaded(dateISO, avail);
   const slots = useMemo(() => slotsFor(dateISO, avail), [dateISO, avail]);
   const closing = dateISO ? closingFor(dateISO) : null;
@@ -712,11 +985,11 @@ function SlotGrid({ dateISO, value, onSelect, onlyFree, onToggleFree, avail, ser
   });
   const visible = onlyFree ? decorated.filter((s) => s.status === "free" || s.status === "last") : decorated;
   const freeCount = decorated.filter((s) => s.status === "free" || s.status === "last").length;
-  return /* @__PURE__ */ React.createElement("div", { className: "section" }, /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("p", { className: "eyebrow" }, "Fascia oraria"), /* @__PURE__ */ React.createElement("h3", { className: "h2", style: { fontSize: "1.02rem", textTransform: "capitalize" } }, longDate(dateISO))), /* @__PURE__ */ React.createElement("p", { className: "sec-hint" }, loaded ? `${freeCount} slot liberi su ${decorated.length}` : "\u2026")), /* @__PURE__ */ React.createElement("div", { className: "slot-tools" }, /* @__PURE__ */ React.createElement("div", { className: "seg", role: "group", "aria-label": "Filtro slot" }, /* @__PURE__ */ React.createElement("button", { type: "button", "aria-pressed": !onlyFree, onClick: () => onToggleFree(false) }, "Tutti"), /* @__PURE__ */ React.createElement("button", { type: "button", "aria-pressed": onlyFree, onClick: () => onToggleFree(true) }, "Solo liberi")), /* @__PURE__ */ React.createElement("div", { className: "legend" }, /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement("i", { className: "swatch", "aria-hidden": "true" }), " libero"), /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement("i", { className: "swatch last", "aria-hidden": "true" }), " ultimo posto"), /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement("i", { className: "swatch busy", "aria-hidden": "true" }), " completo"))), !loaded ? /* @__PURE__ */ React.createElement("div", { className: "empty", "aria-busy": "true" }, /* @__PURE__ */ React.createElement("strong", null, "Caricamento disponibilit\xE0\u2026")) : visible.length === 0 ? /* @__PURE__ */ React.createElement("div", { className: "empty" }, /* @__PURE__ */ React.createElement("strong", null, "Nessuno slot libero in questa giornata."), /* @__PURE__ */ React.createElement("p", null, "Prova un altro giorno della settimana: di solito si libera qualcosa il pomeriggio.")) : /* @__PURE__ */ React.createElement("div", { className: "slot-grid", role: "group", "aria-label": `Orari disponibili ${longDate(dateISO)}` }, visible.map((s) => {
+  return /* @__PURE__ */ React.createElement("div", { className: "section" }, /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("p", { className: "eyebrow" }, t("Fascia oraria")), /* @__PURE__ */ React.createElement("h3", { className: "h2", style: { fontSize: "1.02rem", textTransform: "capitalize" } }, longDate(dateISO))), /* @__PURE__ */ React.createElement("p", { className: "sec-hint" }, loaded ? t("{a} slot liberi su {b}", { a: freeCount, b: decorated.length }) : "\u2026")), /* @__PURE__ */ React.createElement("div", { className: "slot-tools" }, /* @__PURE__ */ React.createElement("div", { className: "seg", role: "group", "aria-label": t("Filtro slot") }, /* @__PURE__ */ React.createElement("button", { type: "button", "aria-pressed": !onlyFree, onClick: () => onToggleFree(false) }, t("Tutti")), /* @__PURE__ */ React.createElement("button", { type: "button", "aria-pressed": onlyFree, onClick: () => onToggleFree(true) }, t("Solo liberi"))), /* @__PURE__ */ React.createElement("div", { className: "legend" }, /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement("i", { className: "swatch", "aria-hidden": "true" }), " ", t("libero")), /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement("i", { className: "swatch last", "aria-hidden": "true" }), " ", t("ultimo posto")), /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement("i", { className: "swatch busy", "aria-hidden": "true" }), " ", t("completo")))), !loaded ? /* @__PURE__ */ React.createElement("div", { className: "empty", "aria-busy": "true" }, /* @__PURE__ */ React.createElement("strong", null, t("Caricamento disponibilit\xE0\u2026"))) : visible.length === 0 ? /* @__PURE__ */ React.createElement("div", { className: "empty" }, /* @__PURE__ */ React.createElement("strong", null, t("Nessuno slot libero in questa giornata.")), /* @__PURE__ */ React.createElement("p", null, t("Prova un altro giorno della settimana: di solito si libera qualcosa il pomeriggio."))) : /* @__PURE__ */ React.createElement("div", { className: "slot-grid", role: "group", "aria-label": t("Orari disponibili {date}", { date: longDate(dateISO) }) }, visible.map((s) => {
     const active = value === s.minutes;
     const isBusy = s.status === "busy";
     const isPast = s.status === "past";
-    const seats = s.status === "last" ? "Ultimo posto" : `${s.free} posti`;
+    const seats = s.status === "last" ? t("Ultimo posto") : t("{n} posti", { n: s.free });
     return /* @__PURE__ */ React.createElement(
       "button",
       {
@@ -728,7 +1001,7 @@ function SlotGrid({ dateISO, value, onSelect, onlyFree, onToggleFree, avail, ser
         onClick: () => onSelect(s.minutes)
       },
       /* @__PURE__ */ React.createElement("span", { className: "slot-time" }, hhmm(s.minutes)),
-      /* @__PURE__ */ React.createElement("span", { className: "slot-seats" }, isBusy ? "Completo" : isPast ? "Trascorso" : seats)
+      /* @__PURE__ */ React.createElement("span", { className: "slot-seats" }, isBusy ? t("Completo") : isPast ? t("Trascorso") : seats)
     );
   })));
 }
@@ -750,10 +1023,11 @@ function BookingStep({
   headingRef,
   avail
 }) {
-  return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("section", { className: "panel", "aria-labelledby": "step1-h" }, /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("p", { className: "eyebrow" }, "Passo 1 \xB7 Servizio"), /* @__PURE__ */ React.createElement("h2", { className: "h2", id: "step1-h", tabIndex: -1, ref: headingRef }, "Cosa ti serve oggi?"))), /* @__PURE__ */ React.createElement(ServiceStrip, { services, value: serviceId, onChange: (id) => {
+  const { t } = useT();
+  return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("section", { className: "panel", "aria-labelledby": "step1-h" }, /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("p", { className: "eyebrow" }, t("Passo 1 \xB7 Servizio")), /* @__PURE__ */ React.createElement("h2", { className: "h2", id: "step1-h", tabIndex: -1, ref: headingRef }, t("Cosa ti serve oggi?")))), /* @__PURE__ */ React.createElement(ServiceStrip, { services, value: serviceId, onChange: (id) => {
     setServiceId(id);
     setTime(null);
-  } }), /* @__PURE__ */ React.createElement("p", { className: "sec-hint", style: { marginTop: 12 } }, "La durata scelta determina l'orario di fine appuntamento nel calendario.")), /* @__PURE__ */ React.createElement("section", { className: "panel section", "aria-labelledby": "step1-week" }, /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("p", { className: "eyebrow" }, "Disponibilit\xE0"), /* @__PURE__ */ React.createElement("h2", { className: "h2", id: "step1-week", style: { fontSize: "1.05rem" } }, "Scegli giorno e ora"))), /* @__PURE__ */ React.createElement(
+  } }), /* @__PURE__ */ React.createElement("p", { className: "sec-hint", style: { marginTop: 12 } }, t("La durata scelta determina l'orario di fine appuntamento nel calendario."))), /* @__PURE__ */ React.createElement("section", { className: "panel section", "aria-labelledby": "step1-week" }, /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("p", { className: "eyebrow" }, t("Disponibilit\xE0")), /* @__PURE__ */ React.createElement("h2", { className: "h2", id: "step1-week", style: { fontSize: "1.05rem" } }, t("Scegli giorno e ora")))), /* @__PURE__ */ React.createElement(
     WeekStrip,
     {
       offset: weekOffset,
@@ -783,7 +1057,7 @@ function BookingStep({
       },
       canGoBack: weekOffset > 0
     }
-  ), nextFree && !time ? /* @__PURE__ */ React.createElement("button", { type: "button", className: "next-free", onClick: onNextFree }, /* @__PURE__ */ React.createElement(Icon, { name: "clock", size: 20 }), /* @__PURE__ */ React.createElement("span", { style: { minWidth: 0 } }, /* @__PURE__ */ React.createElement("span", { className: "nf-label" }, "Prima disponibilit\xE0"), /* @__PURE__ */ React.createElement("span", { className: "nf-value" }, shortDate(nextFree.date), " \xB7 ore ", hhmm(nextFree.minutes))), /* @__PURE__ */ React.createElement("span", { style: { marginLeft: "auto", color: "var(--accent)" } }, /* @__PURE__ */ React.createElement(Icon, { name: "chevronRight", size: 18, stroke: 2 }))) : null, /* @__PURE__ */ React.createElement(
+  ), nextFree && !time ? /* @__PURE__ */ React.createElement("button", { type: "button", className: "next-free", onClick: onNextFree }, /* @__PURE__ */ React.createElement(Icon, { name: "clock", size: 20 }), /* @__PURE__ */ React.createElement("span", { style: { minWidth: 0 } }, /* @__PURE__ */ React.createElement("span", { className: "nf-label" }, t("Prima disponibilit\xE0")), /* @__PURE__ */ React.createElement("span", { className: "nf-value" }, t("{date} \xB7 ore {time}", { date: shortDate(nextFree.date), time: hhmm(nextFree.minutes) }))), /* @__PURE__ */ React.createElement("span", { style: { marginLeft: "auto", color: "var(--accent)" } }, /* @__PURE__ */ React.createElement(Icon, { name: "chevronRight", size: 18, stroke: 2 }))) : null, /* @__PURE__ */ React.createElement(
     SlotGrid,
     {
       dateISO,
@@ -797,25 +1071,26 @@ function BookingStep({
   )));
 }
 function DetailsStep({ service, dateISO, time, barber, form, setForm, errors, onBlurField, onSubmit, sending, headingRef }) {
+  const { t } = useT();
   const end = time + service.min;
-  return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("section", { className: "panel", "aria-labelledby": "step2-h" }, /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("p", { className: "eyebrow" }, "Passo 2 \xB7 Dati cliente"), /* @__PURE__ */ React.createElement("h2", { className: "h2", id: "step2-h", tabIndex: -1, ref: headingRef }, "A nome di chi prenoto?"))), /* @__PURE__ */ React.createElement("div", { className: "recap" }, /* @__PURE__ */ React.createElement("dl", null, /* @__PURE__ */ React.createElement("div", { className: "recap-row" }, /* @__PURE__ */ React.createElement("dt", null, "Servizio"), /* @__PURE__ */ React.createElement("dd", null, service.name, " \xB7 ", service.min, " min")), /* @__PURE__ */ React.createElement("div", { className: "recap-row" }, /* @__PURE__ */ React.createElement("dt", null, "Data"), /* @__PURE__ */ React.createElement("dd", { style: { textTransform: "capitalize" } }, longDate(dateISO))), /* @__PURE__ */ React.createElement("div", { className: "recap-row" }, /* @__PURE__ */ React.createElement("dt", null, "Orario"), /* @__PURE__ */ React.createElement("dd", null, hhmm(time), " \u2013 ", hhmm(end))), /* @__PURE__ */ React.createElement("div", { className: "recap-row" }, /* @__PURE__ */ React.createElement("dt", null, "Barbiere"), /* @__PURE__ */ React.createElement("dd", null, barber)), /* @__PURE__ */ React.createElement("div", { className: "recap-row" }, /* @__PURE__ */ React.createElement("dt", null, "Da pagare in salone"), /* @__PURE__ */ React.createElement("dd", null, "\u20AC", service.price)))), /* @__PURE__ */ React.createElement("form", { className: "form", onSubmit: (e) => {
+  return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("section", { className: "panel", "aria-labelledby": "step2-h" }, /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("p", { className: "eyebrow" }, t("Passo 2 \xB7 Dati cliente")), /* @__PURE__ */ React.createElement("h2", { className: "h2", id: "step2-h", tabIndex: -1, ref: headingRef }, t("A nome di chi prenoto?")))), /* @__PURE__ */ React.createElement("div", { className: "recap" }, /* @__PURE__ */ React.createElement("dl", null, /* @__PURE__ */ React.createElement("div", { className: "recap-row" }, /* @__PURE__ */ React.createElement("dt", null, t("Servizio")), /* @__PURE__ */ React.createElement("dd", null, serviceName(service), " \xB7 ", service.min, " min")), /* @__PURE__ */ React.createElement("div", { className: "recap-row" }, /* @__PURE__ */ React.createElement("dt", null, t("Data")), /* @__PURE__ */ React.createElement("dd", { style: { textTransform: "capitalize" } }, longDate(dateISO))), /* @__PURE__ */ React.createElement("div", { className: "recap-row" }, /* @__PURE__ */ React.createElement("dt", null, t("Orario")), /* @__PURE__ */ React.createElement("dd", null, hhmm(time), " \u2013 ", hhmm(end))), /* @__PURE__ */ React.createElement("div", { className: "recap-row" }, /* @__PURE__ */ React.createElement("dt", null, t("Barbiere")), /* @__PURE__ */ React.createElement("dd", null, barber)), /* @__PURE__ */ React.createElement("div", { className: "recap-row" }, /* @__PURE__ */ React.createElement("dt", null, t("Da pagare in salone")), /* @__PURE__ */ React.createElement("dd", null, "\u20AC", service.price)))), /* @__PURE__ */ React.createElement("form", { className: "form", onSubmit: (e) => {
     e.preventDefault();
     if (onSubmit && !sending) onSubmit();
-  }, noValidate: true }, /* @__PURE__ */ React.createElement("fieldset", { style: { border: 0, margin: 0, padding: 0, display: "grid", gap: 18 } }, /* @__PURE__ */ React.createElement("legend", { className: "sr-only" }, "Dati per la prenotazione"), /* @__PURE__ */ React.createElement("div", { className: "field" }, /* @__PURE__ */ React.createElement("label", { className: "label", htmlFor: "c-name" }, "Nome e cognome ", /* @__PURE__ */ React.createElement("span", { className: "req", "aria-hidden": "true" }, "*"), /* @__PURE__ */ React.createElement("span", { className: "sr-only" }, "(obbligatorio)")), /* @__PURE__ */ React.createElement(
+  }, noValidate: true }, /* @__PURE__ */ React.createElement("fieldset", { style: { border: 0, margin: 0, padding: 0, display: "grid", gap: 18 } }, /* @__PURE__ */ React.createElement("legend", { className: "sr-only" }, t("Dati per la prenotazione")), /* @__PURE__ */ React.createElement("div", { className: "field" }, /* @__PURE__ */ React.createElement("label", { className: "label", htmlFor: "c-name" }, t("Nome e cognome"), " ", /* @__PURE__ */ React.createElement("span", { className: "req", "aria-hidden": "true" }, "*"), /* @__PURE__ */ React.createElement("span", { className: "sr-only" }, t("(obbligatorio)"))), /* @__PURE__ */ React.createElement(
     "input",
     {
       id: "c-name",
       className: "input",
       type: "text",
       autoComplete: "name",
-      placeholder: "Es. Andrea Colombo",
+      placeholder: t("Es. Andrea Colombo"),
       value: form.name,
       "aria-invalid": errors.name ? "true" : "false",
       "aria-describedby": errors.name ? "err-name" : void 0,
       onChange: (e) => setForm({ ...form, name: e.target.value }),
       onBlur: () => onBlurField("name")
     }
-  ), errors.name ? /* @__PURE__ */ React.createElement("p", { className: "field-error", id: "err-name" }, errors.name) : null), /* @__PURE__ */ React.createElement("div", { className: "field" }, /* @__PURE__ */ React.createElement("label", { className: "label", htmlFor: "c-phone" }, "Telefono ", /* @__PURE__ */ React.createElement("span", { className: "req", "aria-hidden": "true" }, "*"), /* @__PURE__ */ React.createElement("span", { className: "sr-only" }, "(obbligatorio)")), /* @__PURE__ */ React.createElement(
+  ), errors.name ? /* @__PURE__ */ React.createElement("p", { className: "field-error", id: "err-name" }, errors.name) : null), /* @__PURE__ */ React.createElement("div", { className: "field" }, /* @__PURE__ */ React.createElement("label", { className: "label", htmlFor: "c-phone" }, t("Telefono"), " ", /* @__PURE__ */ React.createElement("span", { className: "req", "aria-hidden": "true" }, "*"), /* @__PURE__ */ React.createElement("span", { className: "sr-only" }, t("(obbligatorio)"))), /* @__PURE__ */ React.createElement(
     "input",
     {
       id: "c-phone",
@@ -823,14 +1098,14 @@ function DetailsStep({ service, dateISO, time, barber, form, setForm, errors, on
       type: "tel",
       inputMode: "tel",
       autoComplete: "tel",
-      placeholder: "Es. 335 118 4471",
+      placeholder: t("Es. 335 118 4471"),
       value: form.phone,
       "aria-invalid": errors.phone ? "true" : "false",
       "aria-describedby": errors.phone ? "err-phone" : "hint-phone",
       onChange: (e) => setForm({ ...form, phone: e.target.value }),
       onBlur: () => onBlurField("phone")
     }
-  ), errors.phone ? /* @__PURE__ */ React.createElement("p", { className: "field-error", id: "err-phone" }, errors.phone) : /* @__PURE__ */ React.createElement("p", { className: "field-hint", id: "hint-phone" }, "Solo per conferma e promemoria 2 ore prima. Nessun account da creare.")), /* @__PURE__ */ React.createElement("div", { className: "field" }, /* @__PURE__ */ React.createElement("label", { className: "label", htmlFor: "c-email" }, "Email ", /* @__PURE__ */ React.createElement("span", { className: "req", "aria-hidden": "true" }, "*"), /* @__PURE__ */ React.createElement("span", { className: "sr-only" }, "(obbligatorio)")), /* @__PURE__ */ React.createElement(
+  ), errors.phone ? /* @__PURE__ */ React.createElement("p", { className: "field-error", id: "err-phone" }, errors.phone) : /* @__PURE__ */ React.createElement("p", { className: "field-hint", id: "hint-phone" }, t("Solo per conferma e promemoria 2 ore prima. Nessun account da creare."))), /* @__PURE__ */ React.createElement("div", { className: "field" }, /* @__PURE__ */ React.createElement("label", { className: "label", htmlFor: "c-email" }, t("Email"), " ", /* @__PURE__ */ React.createElement("span", { className: "req", "aria-hidden": "true" }, "*"), /* @__PURE__ */ React.createElement("span", { className: "sr-only" }, t("(obbligatorio)"))), /* @__PURE__ */ React.createElement(
     "input",
     {
       id: "c-email",
@@ -838,25 +1113,25 @@ function DetailsStep({ service, dateISO, time, barber, form, setForm, errors, on
       type: "email",
       inputMode: "email",
       autoComplete: "email",
-      placeholder: "Es. nome@esempio.it",
+      placeholder: t("Es. nome@esempio.it"),
       value: form.email,
       "aria-invalid": errors.email ? "true" : "false",
       "aria-describedby": errors.email ? "err-email" : "hint-email",
       onChange: (e) => setForm({ ...form, email: e.target.value }),
       onBlur: () => onBlurField("email")
     }
-  ), errors.email ? /* @__PURE__ */ React.createElement("p", { className: "field-error", id: "err-email" }, errors.email) : /* @__PURE__ */ React.createElement("p", { className: "field-hint", id: "hint-email" }, "Ti mandiamo qui l'invito pronto da aggiungere al tuo calendario.")), /* @__PURE__ */ React.createElement("div", { className: "field" }, /* @__PURE__ */ React.createElement("label", { className: "label", htmlFor: "c-note" }, "Note per il barbiere ", /* @__PURE__ */ React.createElement("span", { style: { color: "var(--muted)", fontWeight: 500 } }, "(facoltativo)")), /* @__PURE__ */ React.createElement(
+  ), errors.email ? /* @__PURE__ */ React.createElement("p", { className: "field-error", id: "err-email" }, errors.email) : /* @__PURE__ */ React.createElement("p", { className: "field-hint", id: "hint-email" }, t("Ti mandiamo qui l'invito pronto da aggiungere al tuo calendario."))), /* @__PURE__ */ React.createElement("div", { className: "field" }, /* @__PURE__ */ React.createElement("label", { className: "label", htmlFor: "c-note" }, t("Note per il barbiere"), " ", /* @__PURE__ */ React.createElement("span", { style: { color: "var(--muted)", fontWeight: 500 } }, "(", t("facoltativo"), ")")), /* @__PURE__ */ React.createElement(
     "textarea",
     {
       id: "c-note",
       className: "input",
       rows: 3,
       maxLength: 240,
-      placeholder: "Es. Macchinetta 1 ai lati, forbice sopra. Arrivo con mio figlio.",
+      placeholder: t("Es. Macchinetta 1 ai lati, forbice sopra. Arrivo con mio figlio."),
       value: form.note,
       onChange: (e) => setForm({ ...form, note: e.target.value })
     }
-  ), /* @__PURE__ */ React.createElement("p", { className: "field-hint" }, 240 - form.note.length, " caratteri disponibili")), /* @__PURE__ */ React.createElement("label", { className: "check", htmlFor: "c-consent" }, /* @__PURE__ */ React.createElement(
+  ), /* @__PURE__ */ React.createElement("p", { className: "field-hint" }, t("{n} caratteri disponibili", { n: 240 - form.note.length }))), /* @__PURE__ */ React.createElement("label", { className: "check", htmlFor: "c-consent" }, /* @__PURE__ */ React.createElement(
     "input",
     {
       id: "c-consent",
@@ -865,20 +1140,21 @@ function DetailsStep({ service, dateISO, time, barber, form, setForm, errors, on
       "aria-invalid": errors.consent ? "true" : "false",
       onChange: (e) => setForm({ ...form, consent: e.target.checked })
     }
-  ), /* @__PURE__ */ React.createElement("span", null, "Acconsento al trattamento dei dati (nome, telefono, note) per gestire questa prenotazione e inviarmi il promemoria.", /* @__PURE__ */ React.createElement("a", { href: "/privacy", target: "_blank", rel: "noreferrer" }, "Leggi l'informativa sulla privacy"))))), Object.keys(errors).length > 0 ? /* @__PURE__ */ React.createElement("div", { className: "alert", role: "alert" }, /* @__PURE__ */ React.createElement(Icon, { name: "user", size: 18 }), /* @__PURE__ */ React.createElement("span", null, "Controlla i campi segnalati: manca poco per completare la prenotazione.")) : null));
+  ), /* @__PURE__ */ React.createElement("span", null, t("Acconsento al trattamento dei dati (nome, telefono, note) per gestire questa prenotazione e inviarmi il promemoria."), " ", /* @__PURE__ */ React.createElement("a", { href: "/privacy", target: "_blank", rel: "noreferrer" }, t("Leggi l'informativa sulla privacy")))))), Object.keys(errors).length > 0 ? /* @__PURE__ */ React.createElement("div", { className: "alert", role: "alert" }, /* @__PURE__ */ React.createElement(Icon, { name: "user", size: 18 }), /* @__PURE__ */ React.createElement("span", null, t("Controlla i campi segnalati: manca poco per completare la prenotazione."))) : null));
 }
 function DoneStep({ service, dateISO, time, barber, code, form, uid, headingRef, sendState }) {
+  const { t } = useT();
   const [downloaded, setDownloaded] = useState(null);
   const start = slotMoment(dateISO, time);
   const end = new Date(start.getTime() + service.min * 6e4);
-  const title = `${service.name} \u2014 ${SALON.name}`;
+  const title = `${serviceName(service)} \u2014 ${SALON.name}`;
   const description = [
-    `Codice prenotazione: ${code}`,
-    `Servizio: ${service.name} (${service.min} min) \u2014 \u20AC${service.price}`,
-    `Barbiere: ${barber}`,
-    `Cliente: ${form.name}${form.phone ? ` \xB7 ${form.phone}` : ""}`,
-    form.note ? `Note: ${form.note}` : "",
-    "Per annullare: apri il link \xABAnnulla la prenotazione\xBB nell'email di conferma."
+    t("Codice prenotazione: {code}", { code }),
+    t("Servizio: {name} ({min} min) \u2014 \u20AC{price}", { name: serviceName(service), min: service.min, price: service.price }),
+    t("Barbiere: {barber}", { barber }),
+    t("Cliente: {name}{phone}", { name: form.name, phone: form.phone ? ` \xB7 ${form.phone}` : "" }),
+    form.note ? t("Note: {note}", { note: form.note }) : "",
+    t("Per annullare: apri il link \xABAnnulla la prenotazione\xBB nell'email di conferma.")
   ].filter(Boolean).join("\n");
   const event = { title, description, location: `${SALON.name}, ${SALON.address}`, start, end };
   const filename = `appuntamento-barberia-lambrate-${dateISO}.ics`;
@@ -887,9 +1163,12 @@ function DoneStep({ service, dateISO, time, barber, code, form, uid, headingRef,
     setDownloaded(filename);
   };
   const waText = encodeURIComponent(
-    `Ciao ${SALON.name}! Ho prenotato: ${service.name}, ${longDate(dateISO)} alle ${hhmm(time)} (codice ${code}).`
+    t(
+      "Ciao {salon}! Ho prenotato: {service}, {date} alle {time} (codice {code}).",
+      { salon: SALON.name, service: serviceName(service), date: longDate(dateISO), time: hhmm(time), code }
+    )
   );
-  return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("section", { className: "done-head", "aria-labelledby": "step3-h" }, /* @__PURE__ */ React.createElement("span", { className: "done-mark", "aria-hidden": "true" }, /* @__PURE__ */ React.createElement(Icon, { name: "check", size: 26, stroke: 2.4 })), /* @__PURE__ */ React.createElement("p", { className: "eyebrow", style: { marginTop: 16 } }, "Passo 3 \xB7 Conferma"), /* @__PURE__ */ React.createElement("h2", { className: "h2", id: "step3-h", tabIndex: -1, ref: headingRef, style: { fontSize: "1.5rem" } }, "Appuntamento confermato"), /* @__PURE__ */ React.createElement("p", { className: "sec-hint", style: { marginTop: 8 } }, "Ti aspettiamo in ", SALON.address, ". Arriva 5 minuti prima: il tempo di un caff\xE8."), sendState === "sent" ? /* @__PURE__ */ React.createElement(
+  return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("section", { className: "done-head", "aria-labelledby": "step3-h" }, /* @__PURE__ */ React.createElement("span", { className: "done-mark", "aria-hidden": "true" }, /* @__PURE__ */ React.createElement(Icon, { name: "check", size: 26, stroke: 2.4 })), /* @__PURE__ */ React.createElement("p", { className: "eyebrow", style: { marginTop: 16 } }, t("Passo 3 \xB7 Conferma")), /* @__PURE__ */ React.createElement("h2", { className: "h2", id: "step3-h", tabIndex: -1, ref: headingRef, style: { fontSize: "1.5rem" } }, t("Appuntamento confermato")), /* @__PURE__ */ React.createElement("p", { className: "sec-hint", style: { marginTop: 8 } }, t("Ti aspettiamo in {address}. Arriva 5 minuti prima: il tempo di un caff\xE8.", { address: SALON.address })), sendState === "sent" ? /* @__PURE__ */ React.createElement(
     "div",
     {
       role: "status",
@@ -906,11 +1185,8 @@ function DoneStep({ service, dateISO, time, barber, code, form, uid, headingRef,
       }
     },
     /* @__PURE__ */ React.createElement(Icon, { name: "check", size: 17, stroke: 2.2 }),
-    " Invito inviato a te (",
-    form.email,
-    ") e al barbiere (",
-    barber,
-    `). Controlla la tua casella email: apri l'allegato .ics e tocca "Aggiungi al calendario".`
+    " ",
+    t(`Invito inviato a te ({email}) e al barbiere ({barber}). Controlla la tua casella email: apri l'allegato .ics e tocca "Aggiungi al calendario".`, { email: form.email, barber })
   ) : sendState === "failed" ? /* @__PURE__ */ React.createElement(
     "div",
     {
@@ -928,8 +1204,9 @@ function DoneStep({ service, dateISO, time, barber, code, form, uid, headingRef,
       }
     },
     /* @__PURE__ */ React.createElement(Icon, { name: "user", size: 17 }),
-    " Non siamo riusciti a inviare l'invito via email. Usa i pulsanti qui sotto per aggiungere l'appuntamento al calendario e avvisa il salone al telefono."
-  ) : null, /* @__PURE__ */ React.createElement("div", { className: "ticket" }, /* @__PURE__ */ React.createElement("div", { className: "ticket-top" }, /* @__PURE__ */ React.createElement("p", { className: "ticket-code" }, "Codice ", code), /* @__PURE__ */ React.createElement("p", { className: "ticket-svc" }, service.name), /* @__PURE__ */ React.createElement("p", { className: "ticket-when" }, cap(longDate(dateISO)), " \xB7 ore ", hhmm(time), "\u2013", hhmm(end.getHours() * 60 + end.getMinutes()))), /* @__PURE__ */ React.createElement("div", { className: "ticket-body" }, /* @__PURE__ */ React.createElement("div", { className: "dashes", "aria-hidden": "true" }), /* @__PURE__ */ React.createElement("dl", null, /* @__PURE__ */ React.createElement("div", { className: "recap-row" }, /* @__PURE__ */ React.createElement("dt", null, "Durata"), /* @__PURE__ */ React.createElement("dd", null, service.min, " minuti")), /* @__PURE__ */ React.createElement("div", { className: "recap-row" }, /* @__PURE__ */ React.createElement("dt", null, "Barbiere"), /* @__PURE__ */ React.createElement("dd", null, barber)), /* @__PURE__ */ React.createElement("div", { className: "recap-row" }, /* @__PURE__ */ React.createElement("dt", null, "Indirizzo"), /* @__PURE__ */ React.createElement("dd", null, SALON.address)), /* @__PURE__ */ React.createElement("div", { className: "recap-row" }, /* @__PURE__ */ React.createElement("dt", null, "Da pagare in salone"), /* @__PURE__ */ React.createElement("dd", null, "\u20AC", service.price)), /* @__PURE__ */ React.createElement("div", { className: "recap-row" }, /* @__PURE__ */ React.createElement("dt", null, "Promemoria"), /* @__PURE__ */ React.createElement("dd", null, "SMS 2 ore prima"))))), /* @__PURE__ */ React.createElement("div", { className: "actions" }, /* @__PURE__ */ React.createElement("button", { type: "button", className: "btn btn-primary btn-block", onClick: handleICS }, /* @__PURE__ */ React.createElement(Icon, { name: "calendar", size: 20 }), "Aggiungi al calendario (.ics)"), /* @__PURE__ */ React.createElement(
+    " ",
+    t("Non siamo riusciti a inviare l'invito via email. Usa i pulsanti qui sotto per aggiungere l'appuntamento al calendario e avvisa il salone al telefono.")
+  ) : null, /* @__PURE__ */ React.createElement("div", { className: "ticket" }, /* @__PURE__ */ React.createElement("div", { className: "ticket-top" }, /* @__PURE__ */ React.createElement("p", { className: "ticket-code" }, t("Codice {code}", { code })), /* @__PURE__ */ React.createElement("p", { className: "ticket-svc" }, serviceName(service)), /* @__PURE__ */ React.createElement("p", { className: "ticket-when" }, t("{date} \xB7 ore {a}\u2013{b}", { date: cap(longDate(dateISO)), a: hhmm(time), b: hhmm(end.getHours() * 60 + end.getMinutes()) }))), /* @__PURE__ */ React.createElement("div", { className: "ticket-body" }, /* @__PURE__ */ React.createElement("div", { className: "dashes", "aria-hidden": "true" }), /* @__PURE__ */ React.createElement("dl", null, /* @__PURE__ */ React.createElement("div", { className: "recap-row" }, /* @__PURE__ */ React.createElement("dt", null, t("Durata")), /* @__PURE__ */ React.createElement("dd", null, t("{n} minuti", { n: service.min }))), /* @__PURE__ */ React.createElement("div", { className: "recap-row" }, /* @__PURE__ */ React.createElement("dt", null, t("Barbiere")), /* @__PURE__ */ React.createElement("dd", null, barber)), /* @__PURE__ */ React.createElement("div", { className: "recap-row" }, /* @__PURE__ */ React.createElement("dt", null, t("Indirizzo")), /* @__PURE__ */ React.createElement("dd", null, SALON.address)), /* @__PURE__ */ React.createElement("div", { className: "recap-row" }, /* @__PURE__ */ React.createElement("dt", null, t("Da pagare in salone")), /* @__PURE__ */ React.createElement("dd", null, "\u20AC", service.price)), /* @__PURE__ */ React.createElement("div", { className: "recap-row" }, /* @__PURE__ */ React.createElement("dt", null, t("Promemoria")), /* @__PURE__ */ React.createElement("dd", null, t("SMS 2 ore prima")))))), /* @__PURE__ */ React.createElement("div", { className: "actions" }, /* @__PURE__ */ React.createElement("button", { type: "button", className: "btn btn-primary btn-block", onClick: handleICS }, /* @__PURE__ */ React.createElement(Icon, { name: "calendar", size: 20 }), t("Aggiungi al calendario (.ics)")), /* @__PURE__ */ React.createElement(
     "a",
     {
       className: "btn btn-ghost btn-block",
@@ -938,7 +1215,7 @@ function DoneStep({ service, dateISO, time, barber, code, form, uid, headingRef,
       rel: "noopener noreferrer"
     },
     /* @__PURE__ */ React.createElement(Icon, { name: "calendar", size: 20 }),
-    "Apri in Google Calendar"
+    t("Apri in Google Calendar")
   ), /* @__PURE__ */ React.createElement(
     "a",
     {
@@ -947,31 +1224,25 @@ function DoneStep({ service, dateISO, time, barber, code, form, uid, headingRef,
       target: "_blank",
       rel: "noopener noreferrer"
     },
-    "Invia la conferma su WhatsApp"
-  )), downloaded ? /* @__PURE__ */ React.createElement("p", { className: "ok-note", role: "status" }, /* @__PURE__ */ React.createElement(Icon, { name: "check", size: 17, stroke: 2.2 }), "File pronto: ", downloaded) : null, /* @__PURE__ */ React.createElement("p", { className: "fineprint" }, "Il file .ics si apre direttamente nell\u2019app Calendario su iPhone e in Google Calendar su Android. Se il download \xE8 bloccato dal browser, usa il pulsante Google Calendar: \xE8 gi\xE0 compilato con data, ora, durata e indirizzo del salone.")));
+    t("Invia la conferma su WhatsApp")
+  )), downloaded ? /* @__PURE__ */ React.createElement("p", { className: "ok-note", role: "status" }, /* @__PURE__ */ React.createElement(Icon, { name: "check", size: 17, stroke: 2.2 }), t("File pronto: {name}", { name: downloaded })) : null, /* @__PURE__ */ React.createElement("p", { className: "fineprint" }, t("Il file .ics si apre direttamente nell\u2019app Calendario su iPhone e in Google Calendar su Android. Se il download \xE8 bloccato dal browser, usa il pulsante Google Calendar: \xE8 gi\xE0 compilato con data, ora, durata e indirizzo del salone."))));
 }
 function InfoPanel({ todayDow }) {
-  const rows = [
-    { dow: 1, label: "Luned\xEC" },
-    { dow: 2, label: "Marted\xEC" },
-    { dow: 3, label: "Mercoled\xEC" },
-    { dow: 4, label: "Gioved\xEC" },
-    { dow: 5, label: "Venerd\xEC" },
-    { dow: 6, label: "Sabato" },
-    { dow: 0, label: "Domenica" }
-  ];
-  return /* @__PURE__ */ React.createElement("aside", { className: "info", "aria-label": "Informazioni sul salone" }, /* @__PURE__ */ React.createElement("h2", null, "Il salone"), /* @__PURE__ */ React.createElement("div", { className: "info-card" }, /* @__PURE__ */ React.createElement("p", null, SALON.story), /* @__PURE__ */ React.createElement("ul", { className: "info-lines", style: { marginTop: 14 } }, /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement(Icon, { name: "pin", size: 18 }), /* @__PURE__ */ React.createElement("span", null, SALON.address, /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement("a", { href: SALON.mapUrl, target: "_blank", rel: "noopener noreferrer", style: { color: "var(--accent)" } }, "Apri in Google Maps"))), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement(Icon, { name: "phone", size: 18 }), /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement("a", { href: `tel:${SALON.phoneHref}`, style: { color: "var(--ink)", fontWeight: 640 } }, SALON.phoneLabel))), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement(Icon, { name: "clock", size: 18 }), /* @__PURE__ */ React.createElement("span", null, "Consigliata la prenotazione online: in negozio restano pochi posti.")))), /* @__PURE__ */ React.createElement("h2", null, "Orari"), /* @__PURE__ */ React.createElement("div", { className: "info-card" }, /* @__PURE__ */ React.createElement("ul", { className: "hours" }, rows.map((r) => {
+  const { t } = useT();
+  const rows = [1, 2, 3, 4, 5, 6, 0].map((dow) => ({ dow, label: cap(WD_LONG[LANG][dow]) }));
+  return /* @__PURE__ */ React.createElement("aside", { className: "info", "aria-label": t("Informazioni sul salone") }, /* @__PURE__ */ React.createElement("h2", null, t("Il salone")), /* @__PURE__ */ React.createElement("div", { className: "info-card" }, /* @__PURE__ */ React.createElement("p", null, t(SALON.story, { name: SALON.name })), /* @__PURE__ */ React.createElement("ul", { className: "info-lines", style: { marginTop: 14 } }, /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement(Icon, { name: "pin", size: 18 }), /* @__PURE__ */ React.createElement("span", null, SALON.address, /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement("a", { href: SALON.mapUrl, target: "_blank", rel: "noopener noreferrer", style: { color: "var(--accent)" } }, t("Apri in Google Maps")))), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement(Icon, { name: "phone", size: 18 }), /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement("a", { href: `tel:${SALON.phoneHref}`, style: { color: "var(--ink)", fontWeight: 640 } }, SALON.phoneLabel))), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement(Icon, { name: "clock", size: 18 }), /* @__PURE__ */ React.createElement("span", null, t("Consigliata la prenotazione online: in negozio restano pochi posti."))))), /* @__PURE__ */ React.createElement("h2", null, t("Orari")), /* @__PURE__ */ React.createElement("div", { className: "info-card" }, /* @__PURE__ */ React.createElement("ul", { className: "hours" }, rows.map((r) => {
     const h = HOURS[r.dow];
-    return /* @__PURE__ */ React.createElement("li", { key: r.label, className: r.dow === todayDow ? "is-today" : "" }, /* @__PURE__ */ React.createElement("span", null, r.label, r.dow === todayDow ? /* @__PURE__ */ React.createElement("span", { className: "day-tag" }, "oggi") : null), /* @__PURE__ */ React.createElement("span", { className: h ? "" : "closed" }, h ? `${hhmm(h.open)}\u2013${hhmm(h.close)}` : "chiuso"));
-  }))), /* @__PURE__ */ React.createElement("h2", null, "Buono a sapersi"), /* @__PURE__ */ React.createElement("div", { className: "info-card" }, /* @__PURE__ */ React.createElement("ul", { className: "info-lines" }, SALON.policies.map((p) => /* @__PURE__ */ React.createElement("li", { key: p }, /* @__PURE__ */ React.createElement(Icon, { name: "check", size: 17, stroke: 2.1 }), /* @__PURE__ */ React.createElement("span", null, p))))), /* @__PURE__ */ React.createElement("p", { className: "info-foot" }, SALON.name, " \xB7 ", SALON.piva, /* @__PURE__ */ React.createElement("br", null), "Disponibilit\xE0 in tempo reale: prenota e ricevi l'invito via email sul tuo calendario."));
+    return /* @__PURE__ */ React.createElement("li", { key: r.label, className: r.dow === todayDow ? "is-today" : "" }, /* @__PURE__ */ React.createElement("span", null, r.label, r.dow === todayDow ? /* @__PURE__ */ React.createElement("span", { className: "day-tag" }, t("oggi")) : null), /* @__PURE__ */ React.createElement("span", { className: h ? "" : "closed" }, h ? `${hhmm(h.open)}\u2013${hhmm(h.close)}` : t("chiuso")));
+  }))), /* @__PURE__ */ React.createElement("h2", null, t("Buono a sapersi")), /* @__PURE__ */ React.createElement("div", { className: "info-card" }, /* @__PURE__ */ React.createElement("ul", { className: "info-lines" }, SALON.policies.map((p) => /* @__PURE__ */ React.createElement("li", { key: p }, /* @__PURE__ */ React.createElement(Icon, { name: "check", size: 17, stroke: 2.1 }), /* @__PURE__ */ React.createElement("span", null, t(p)))))), /* @__PURE__ */ React.createElement("p", { className: "info-foot" }, SALON.name, " \xB7 ", SALON.piva, /* @__PURE__ */ React.createElement("br", null), t("Disponibilit\xE0 in tempo reale: prenota e ricevi l'invito via email sul tuo calendario.")));
 }
 function SiblingsStrip() {
+  const { t } = useT();
   const sibs = SALON.siblings || [];
   if (!sibs.length) return null;
   const base = (location.hostname || "").split(".");
   const domain = base.length > 1 ? base.slice(1).join(".") : "example.com";
   const cur = SALON.slug || SALON_SLUG;
-  return /* @__PURE__ */ React.createElement("div", { className: "sib-strip", role: "navigation", "aria-label": "Scegli la postazione" }, /* @__PURE__ */ React.createElement("span", { className: "sib-label" }, "Postazioni del salone:"), sibs.map((s) => /* @__PURE__ */ React.createElement(
+  return /* @__PURE__ */ React.createElement("div", { className: "sib-strip", role: "navigation", "aria-label": t("Scegli la postazione") }, /* @__PURE__ */ React.createElement("span", { className: "sib-label" }, t("Postazioni del salone:")), sibs.map((s) => /* @__PURE__ */ React.createElement(
     "a",
     {
       key: s.slug,
@@ -982,6 +1253,14 @@ function SiblingsStrip() {
   )));
 }
 function App() {
+  const [lang, setLangState] = useState(LANG);
+  const t = useMemo(() => makeT(lang), [lang]);
+  const toggleLang = () => {
+    const l = lang === "it" ? "en" : "it";
+    saveLang(l);
+    setLangState(l);
+  };
+  const ctx = { lang, t, toggle: toggleLang };
   const [step, setStep] = useState(0);
   const [serviceId, setServiceId] = useState(null);
   const [weekOffset, setWeekOffset] = useState(0);
@@ -1006,6 +1285,16 @@ function App() {
     }).catch(() => {
     }).finally(() => setSalonReady(true));
   }, []);
+  useEffect(() => {
+    try {
+      document.documentElement.lang = lang;
+    } catch (e) {
+    }
+    try {
+      document.title = `${SALON.name} \u2014 ${makeT(lang)("Prenota online")}`;
+    } catch (e) {
+    }
+  }, [lang, salonReady]);
   const service = SERVICES.find((s) => s.id === serviceId) || null;
   useEffect(() => {
     let cancelled = false;
@@ -1085,19 +1374,19 @@ function App() {
   const validate = (values) => {
     const next = {};
     const name = values.name.trim();
-    if (name.length < 2) next.name = "Inserisci nome e cognome (almeno 2 caratteri).";
-    else if (!name.includes(" ")) next.name = "Aggiungi anche il cognome, cos\xEC ti riconosciamo alla cassa.";
+    if (name.length < 2) next.name = t("Inserisci nome e cognome (almeno 2 caratteri).");
+    else if (!name.includes(" ")) next.name = t("Aggiungi anche il cognome, cos\xEC ti riconosciamo alla cassa.");
     const digits = values.phone.replace(/\D/g, "");
-    if (digits.length === 0) next.phone = "Inserisci il numero di telefono.";
-    else if (digits.length < 9 || digits.length > 13) next.phone = "Numero non valido: usa almeno 9 cifre, es. 335 118 4471.";
+    if (digits.length === 0) next.phone = t("Inserisci il numero di telefono.");
+    else if (digits.length < 9 || digits.length > 13) next.phone = t("Numero non valido: usa almeno 9 cifre, es. 335 118 4471.");
     const email = values.email.trim();
-    if (email.length === 0) next.email = "Inserisci l'email: ti arrivano il promemoria e l'invito al calendario.";
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) next.email = "Email non valida. Controlla l'indirizzo, es. nome@esempio.it";
-    if (!values.consent) next.consent = "Serve il consenso per gestire la prenotazione.";
+    if (email.length === 0) next.email = t("Inserisci l'email: ti arrivano il promemoria e l'invito al calendario.");
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) next.email = t("Email non valida. Controlla l'indirizzo, es. nome@esempio.it");
+    if (!values.consent) next.consent = t("Serve il consenso per gestire la prenotazione.");
     return next;
   };
   const onBlurField = (field) => {
-    setTouched((t) => ({ ...t, [field]: true }));
+    setTouched((t2) => ({ ...t2, [field]: true }));
     const found = validate(form);
     setErrors((prev) => {
       const next = { ...prev };
@@ -1160,14 +1449,14 @@ function App() {
         setTime(null);
         setBookFeedback({
           type: "conflict",
-          msg: `L'orario delle ${hhmm(snapshot.time)} \xE8 appena stato prenotato da qualcun altro. Scegline uno ancora libero qui sotto.`
+          msg: t("L'orario delle {time} \xE8 appena stato prenotato da qualcun altro. Scegline uno ancora libero qui sotto.", { time: hhmm(snapshot.time) })
         });
-        setAvailTick((t) => t + 1);
+        setAvailTick((t2) => t2 + 1);
         setStep(0);
         return;
       }
       if (data.ok) {
-        setAvailTick((t) => t + 1);
+        setAvailTick((t2) => t2 + 1);
         setSendState("sent");
         setConfirmed({ ...snapshot, code: data.code || snapshot.code, sendState: "sent" });
         setStep(2);
@@ -1176,14 +1465,14 @@ function App() {
       setSendState(null);
       setBookFeedback({
         type: "error",
-        msg: data && data.error || "Non \xE8 stato possibile completare la prenotazione."
+        msg: data && data.error || t("Non \xE8 stato possibile completare la prenotazione.")
       });
       setStep(0);
     } catch (e) {
       setSendState(null);
       setBookFeedback({
         type: "error",
-        msg: "Server non raggiungibile. Riprova tra qualche secondo."
+        msg: t("Server non raggiungibile. Riprova tra qualche secondo.")
       });
       setStep(0);
     }
@@ -1213,11 +1502,22 @@ function App() {
     if (closing && time + service.min > closing) return false;
     return true;
   })();
-  const ctaValue = ready ? `${service.name} \xB7 ${cap(shortDate(dateISO))} \xB7 ${hhmm(time)}` : service ? `${service.name} \xB7 scegli un orario` : "Scegli servizio e orario";
+  const ctaValue = ready ? `${serviceName(service)} \xB7 ${cap(shortDate(dateISO))} \xB7 ${hhmm(time)}` : service ? t("{name} \xB7 scegli un orario", { name: serviceName(service) }) : t("Scegli servizio e orario");
   if (!salonReady) {
-    return /* @__PURE__ */ React.createElement("div", { className: "page" }, /* @__PURE__ */ React.createElement("style", null, CSS), /* @__PURE__ */ React.createElement("div", { className: "brand", style: { padding: "20px" } }, /* @__PURE__ */ React.createElement("h1", { className: "wordmark" }, SALON.name), /* @__PURE__ */ React.createElement("p", { className: "brand-note" }, "Caricamento\u2026")));
+    return /* @__PURE__ */ React.createElement(LangCtx.Provider, { value: ctx }, /* @__PURE__ */ React.createElement("div", { className: "page" }, /* @__PURE__ */ React.createElement("style", null, CSS), /* @__PURE__ */ React.createElement("div", { className: "brand", style: { padding: "20px" } }, /* @__PURE__ */ React.createElement("h1", { className: "wordmark" }, SALON.name), /* @__PURE__ */ React.createElement("p", { className: "brand-note" }, t("Caricamento\u2026")))));
   }
-  return /* @__PURE__ */ React.createElement("div", { className: "page" }, /* @__PURE__ */ React.createElement("style", null, CSS), /* @__PURE__ */ React.createElement("div", { className: "shell" }, /* @__PURE__ */ React.createElement("div", { className: "book" }, /* @__PURE__ */ React.createElement(SiblingsStrip, null), /* @__PURE__ */ React.createElement("header", { className: "brand" }, /* @__PURE__ */ React.createElement("div", { className: "brand-top" }, /* @__PURE__ */ React.createElement(PoleMark, null), /* @__PURE__ */ React.createElement("div", { style: { minWidth: 0 } }, /* @__PURE__ */ React.createElement("p", { className: "brand-eyebrow" }, SALON.tagline), /* @__PURE__ */ React.createElement("h1", { className: "wordmark" }, SALON.name)), /* @__PURE__ */ React.createElement("span", { className: `open-chip${status.open ? "" : " is-closed"}` }, /* @__PURE__ */ React.createElement("span", { className: "dot", "aria-hidden": "true" }), status.label)), /* @__PURE__ */ React.createElement("p", { className: "brand-sub" }, SALON.address, " \xB7", " ", /* @__PURE__ */ React.createElement("a", { href: `tel:${SALON.phoneHref}` }, SALON.phoneLabel)), /* @__PURE__ */ React.createElement("p", { className: "brand-note" }, "Prenotazione senza account: bastano nome e numero di telefono.")), /* @__PURE__ */ React.createElement(Stepper, { step, onGo: (i) => sendState === "loading" ? null : i < step ? setStep(i) : null }), /* @__PURE__ */ React.createElement("div", { "aria-live": "polite", className: "sr-only" }, "Passo ", step + 1, " di 3: ", ["servizio e orario", "dati cliente", "conferma"][step]), /* @__PURE__ */ React.createElement("main", null, step === 0 && bookFeedback ? /* @__PURE__ */ React.createElement(
+  return /* @__PURE__ */ React.createElement(LangCtx.Provider, { value: ctx }, /* @__PURE__ */ React.createElement("div", { className: "page" }, /* @__PURE__ */ React.createElement("style", null, CSS), /* @__PURE__ */ React.createElement("div", { className: "shell" }, /* @__PURE__ */ React.createElement("div", { className: "book" }, /* @__PURE__ */ React.createElement(SiblingsStrip, null), /* @__PURE__ */ React.createElement("header", { className: "brand" }, /* @__PURE__ */ React.createElement("div", { className: "brand-top" }, /* @__PURE__ */ React.createElement(PoleMark, null), /* @__PURE__ */ React.createElement("div", { style: { minWidth: 0 } }, /* @__PURE__ */ React.createElement("p", { className: "brand-eyebrow" }, t(SALON.tagline)), /* @__PURE__ */ React.createElement("h1", { className: "wordmark" }, SALON.name)), /* @__PURE__ */ React.createElement("span", { className: `open-chip${status.open ? "" : " is-closed"}` }, /* @__PURE__ */ React.createElement("span", { className: "dot", "aria-hidden": "true" }), statusLabel(status)), /* @__PURE__ */ React.createElement(
+    "button",
+    {
+      type: "button",
+      className: "lang-btn",
+      onClick: ctx.toggle,
+      "aria-label": lang === "it" ? "Passa all'inglese" : "Switch to Italian",
+      title: lang === "it" ? "Passa all'inglese" : "Switch to Italian"
+    },
+    /* @__PURE__ */ React.createElement(FlagIcon, { code: lang === "it" ? "en" : "it" }),
+    /* @__PURE__ */ React.createElement("span", null, lang === "it" ? "EN" : "IT")
+  )), /* @__PURE__ */ React.createElement("p", { className: "brand-sub" }, SALON.address, " \xB7", " ", /* @__PURE__ */ React.createElement("a", { href: `tel:${SALON.phoneHref}` }, SALON.phoneLabel)), /* @__PURE__ */ React.createElement("p", { className: "brand-note" }, t("Prenotazione senza account: bastano nome e numero di telefono."))), /* @__PURE__ */ React.createElement(Stepper, { step, onGo: (i) => sendState === "loading" ? null : i < step ? setStep(i) : null }), /* @__PURE__ */ React.createElement("div", { "aria-live": "polite", className: "sr-only" }, t("Passo {n} di 3: {step}", { n: step + 1, step: t(["servizio e orario", "dati cliente", "conferma"][step]) })), /* @__PURE__ */ React.createElement("main", null, step === 0 && bookFeedback ? /* @__PURE__ */ React.createElement(
     "div",
     {
       role: "alert",
@@ -1286,7 +1586,7 @@ function App() {
       headingRef,
       sendState: confirmed.sendState || sendState
     }
-  ) : null), step === 0 ? /* @__PURE__ */ React.createElement("div", { className: "cta" }, /* @__PURE__ */ React.createElement("div", { className: "cta-inner" }, /* @__PURE__ */ React.createElement("div", { className: "cta-info" }, /* @__PURE__ */ React.createElement("span", { className: "cta-label" }, "Riepilogo"), /* @__PURE__ */ React.createElement("span", { className: "cta-value" }, ctaValue)), /* @__PURE__ */ React.createElement(
+  ) : null), step === 0 ? /* @__PURE__ */ React.createElement("div", { className: "cta" }, /* @__PURE__ */ React.createElement("div", { className: "cta-inner" }, /* @__PURE__ */ React.createElement("div", { className: "cta-info" }, /* @__PURE__ */ React.createElement("span", { className: "cta-label" }, t("Riepilogo")), /* @__PURE__ */ React.createElement("span", { className: "cta-value" }, ctaValue)), /* @__PURE__ */ React.createElement(
     "button",
     {
       type: "button",
@@ -1294,7 +1594,7 @@ function App() {
       disabled: !ready || sendState === "loading",
       onClick: goToDetails
     },
-    "Continua"
-  ))) : null, step === 1 ? /* @__PURE__ */ React.createElement("div", { className: "cta" }, /* @__PURE__ */ React.createElement("div", { className: "cta-row" }, /* @__PURE__ */ React.createElement("button", { type: "button", className: "btn btn-ghost", onClick: () => setStep(0), disabled: sendState === "loading" }, /* @__PURE__ */ React.createElement(Icon, { name: "chevronLeft", size: 18, stroke: 2 }), "Indietro"), /* @__PURE__ */ React.createElement("button", { type: "button", className: "btn btn-primary", onClick: confirm, disabled: sendState === "loading" }, sendState === "loading" ? "Invio in corso\u2026" : "Conferma prenotazione")), /* @__PURE__ */ React.createElement("p", { className: "fineprint", style: { marginTop: 10 } }, "Nessun pagamento online: ", `\u20AC${confirmed ? confirmed.service.price : service ? service.price : 0}`, " da saldare in salone.")) : null, step === 2 ? /* @__PURE__ */ React.createElement("div", { className: "cta" }, /* @__PURE__ */ React.createElement("div", { className: "cta-row" }, /* @__PURE__ */ React.createElement("button", { type: "button", className: "btn btn-ghost", onClick: reset }, "Prenota un altro appuntamento"), /* @__PURE__ */ React.createElement("a", { className: "btn btn-dark", href: `tel:${SALON.phoneHref}` }, "Chiama il salone"))) : null), /* @__PURE__ */ React.createElement(InfoPanel, { todayDow: (/* @__PURE__ */ new Date()).getDay() })));
+    t("Continua")
+  ))) : null, step === 1 ? /* @__PURE__ */ React.createElement("div", { className: "cta" }, /* @__PURE__ */ React.createElement("div", { className: "cta-row" }, /* @__PURE__ */ React.createElement("button", { type: "button", className: "btn btn-ghost", onClick: () => setStep(0), disabled: sendState === "loading" }, /* @__PURE__ */ React.createElement(Icon, { name: "chevronLeft", size: 18, stroke: 2 }), t("Indietro")), /* @__PURE__ */ React.createElement("button", { type: "button", className: "btn btn-primary", onClick: confirm, disabled: sendState === "loading" }, sendState === "loading" ? t("Invio in corso\u2026") : t("Conferma prenotazione"))), /* @__PURE__ */ React.createElement("p", { className: "fineprint", style: { marginTop: 10 } }, t("Nessun pagamento online: {amount} da saldare in salone.", { amount: `\u20AC${confirmed ? confirmed.service.price : service ? service.price : 0}` }))) : null, step === 2 ? /* @__PURE__ */ React.createElement("div", { className: "cta" }, /* @__PURE__ */ React.createElement("div", { className: "cta-row" }, /* @__PURE__ */ React.createElement("button", { type: "button", className: "btn btn-ghost", onClick: reset }, t("Prenota un altro appuntamento")), /* @__PURE__ */ React.createElement("a", { className: "btn btn-dark", href: `tel:${SALON.phoneHref}` }, t("Chiama il salone")))) : null), /* @__PURE__ */ React.createElement(InfoPanel, { todayDow: (/* @__PURE__ */ new Date()).getDay() }))));
 }
 ReactDOM.createRoot(document.getElementById("root")).render(/* @__PURE__ */ React.createElement(App, null));

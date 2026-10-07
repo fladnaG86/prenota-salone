@@ -34,6 +34,11 @@ straight into their phone calendar.
   duration-aware capacity check, so two clients can't grab the same slot.
 - **Owner panel** (`/panel`, one passcode per salon) — view, reschedule and
   cancel bookings; login rate-limited, session cookie is HMAC-signed.
+- **Italian / English interface** — a flag button in the top-right corner
+  switches the whole booking page instantly, with no reload. The choice is
+  remembered in `localStorage` and pre-selected from the browser language on the
+  first visit. (The owner panel, the emails and the privacy notice are still
+  Italian only.)
 - **Confirmation email with a calendar invite (`.ics`)** — the client taps once
   and the appointment lands in their **iPhone or Android calendar**, with a
   reminder 2 hours before. No app to install, nothing to type by hand. The
@@ -260,7 +265,7 @@ deploy/           systemd unit + nginx wildcard-subdomain example
 To rebuild the frontend after editing `App.jsx`:
 
 ```bash
-npx esbuild App.jsx --loader:.jsx=jsx --bundle --outfile=app.js
+npx esbuild App.jsx --loader:.jsx=jsx --outfile=app.js
 ```
 
 (or run any esbuild you already have; the server serves `app.js` as-is).
@@ -287,6 +292,9 @@ aggiunge al calendario di iPhone o Android con un tocco (promemoria 2 ore prima)
 Il titolare gestisce appuntamenti da `/panel`.
 Le prenotazioni sono **sicure in concorrenza** (transazione atomica + controllo
 capienza), e i dati raccolti sono minimi (pagina privacy GDPR inclusa).
+L'interfaccia si passa da italiano a inglese con il tasto con la bandiera in alto
+a destra (scelta ricordata; all'avvio segue la lingua del browser). Pannello,
+email e informativa privacy sono per ora solo in italiano.
 
 Avvio rapido: `python3 srv.py` → <http://localhost:8899/> (demo), pannello
 `/panel` con codice **`demo1234`**. Licenza MIT.
